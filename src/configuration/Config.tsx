@@ -2,8 +2,8 @@ import { ThemingProps } from '@chakra-ui/react'
 import { polygon} from '@wagmi/chains'
 
 export const SITE_NAME = 'Web3Yak Application'
-export const SITE_DESCRIPTION = 'ODude Name Service'
-export const SITE_URL = 'https://www.odude.com/'
+export const SITE_DESCRIPTION = 'YAK Name Service'
+export const SITE_URL = 'https://www.web3yak.com/'
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_SCHEME: ThemingProps['colorScheme'] = 'gray'
@@ -23,9 +23,9 @@ export const NETWORK_ERROR = "Unsupported Blockchain Network" //Change network n
 export const DOMAIN_TLDS = ['dude', 'yak']; // Array of TLDs
 export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/dude.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 137 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
-export const DOMAIN_DESCRIPTION = 'ODude Name service'
+export const DOMAIN_DESCRIPTION = 'YAK Name service'
 export const DOMAIN_TYPE = "W3D" //W3D for polygon, FVM for Filecoin net
-export const DOMAIN_TITLE = "Join our Dude Community" //Title above the search input field. 
+export const DOMAIN_TITLE = "Join our YAK Community" //Title above the search input field. 
 export const DOMAIN_PLACEHOLDER = "Search for a name" //Placeholder for search input field 
 
 //Admin wallet address of TLD mentioned at DOMAIN_TLD
@@ -39,7 +39,7 @@ export const NOTICE_TITLE = "Bulletin board"
 export const NOTICE_NON_MEMBER = "Only the .dude & .yak name holder can view bulletin board."
 
 //Banner at front page
-export const DOMAIN_BANNER = "https://odude.com/odude400x100.png" //290x80 size
+export const DOMAIN_BANNER = "https://web3yak.com/wp-content/uploads/2024/08/yak.png" //290x80 size
 
 //Configuration should match with the chain specified at NETWORKS
 //Leave TOKEN_CONTRACT_ADDRESS to blank for default ETH payment
