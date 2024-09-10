@@ -6,20 +6,20 @@ import {
   Spacer,
   Box,
   Collapse,
-  Icon,
   Link,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Stack,
   useDisclosure,
-  useBreakpointValue,
+  Icon,
 } from "@chakra-ui/react";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Logo } from "../../Reusables/helper";
 import { SITE_NAME } from "../../configuration/Config";
+import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons"; // Import icons
+
 interface Props {
   className?: string;
 }
@@ -33,7 +33,8 @@ interface NavItem {
 
 export function Header(props: Props) {
   const className = props.className ?? "";
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle } = useDisclosure(); // Manage the mobile menu state here
+
   return (
     <Flex
       as="header"
@@ -44,7 +45,6 @@ export function Header(props: Props) {
       px={4}
       py={2}
       mb={8}
-      //pos="fixed"
       pos="sticky"
       w="full"
       alignItems="center"
@@ -54,19 +54,7 @@ export function Header(props: Props) {
       borderBottomColor="white"
     >
       <Flex flex={{ base: 2 }} justify={{ base: "center", md: "start" }}>
-        <Link
-          href={"/"}
-          textAlign={useBreakpointValue({ base: "center", md: "left" })}
-          fontFamily={"heading"}
-          color={useColorModeValue("gray.800", "white")}
-          _hover={{
-            textDecoration: "none",
-            color: useColorModeValue("gray.800", "white"),
-            bg: useColorModeValue("green.200", "green.900"),
-          }}
-        >
-          <Logo />
-        </Link>
+        <Logo onToggle={onToggle} isOpen={isOpen} />
         <Flex display={{ base: "none", md: "flex" }} ml={10}>
           <DesktopNav />
         </Flex>
@@ -87,6 +75,8 @@ export function Header(props: Props) {
         />
         <ThemeSwitcher />
       </Flex>
+
+      {/* Mobile navigation controlled by isOpen */}
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
@@ -99,6 +89,7 @@ const DesktopNav = () => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
   const linkHoverBackgroundColor = useColorModeValue("blue.200", "blue.900");
+
   return (
     <Stack direction={"row"} spacing={8}>
       {NAV_ITEMS.map((navItem) => (
@@ -186,9 +177,14 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 const MobileNav = () => {
   return (
     <Stack
+      position="absolute"  // Add absolute positioning
+      top="60px"           // Adjust this based on your header's height
+      left="0"
+      width="50%"         // Ensure the menu takes full width of the screen
       bg={useColorModeValue("white", "gray.800")}
       p={4}
       display={{ md: "none" }}
+      zIndex={99}          // Ensure the menu is on top of other elements
     >
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
@@ -197,25 +193,29 @@ const MobileNav = () => {
   );
 };
 
+
 const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
+  const handleToggle = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevents navigation on toggle
+    onToggle();
+  };
+
   return (
-    <Stack spacing={4} onClick={children && onToggle}>
+    <Stack spacing={4}>
       <Flex
         py={2}
         as={Link}
         href={href ?? "#"}
         justify={"space-between"}
         align={"center"}
+        onClick={(e) => !children && e.preventDefault()} // Only navigate if no children
         _hover={{
-          textDecoration: "bold",
+          textDecoration: "none",
         }}
       >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
+        <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
           {label}
         </Text>
         {children && (
@@ -225,11 +225,13 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
             transform={isOpen ? "rotate(180deg)" : ""}
             w={6}
             h={6}
+            onClick={handleToggle} // Toggle submenu without navigating
           />
         )}
       </Flex>
 
-      <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
+      {/* Submenu collapse */}
+      <Collapse in={isOpen} animateOpacity>
         <Stack
           mt={2}
           pl={4}
@@ -250,20 +252,21 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   );
 };
 
+
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Home",
     href: "/",
     children: [
       {
-        label: 'ODude',
-        subLabel: 'ODude.com',
-        href: 'https://odude.com',
+        label: "ODude",
+        subLabel: "ODude.com",
+        href: "https://odude.com",
       },
       {
-        label: 'Web3Domain',
-        subLabel: 'Web3Domain.org',
-        href: 'https://web3domain.org',
+        label: "Web3Domain",
+        subLabel: "Web3Domain.org",
+        href: "https://web3domain.org",
       },
     ],
   },
