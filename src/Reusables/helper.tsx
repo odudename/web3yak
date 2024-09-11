@@ -10,38 +10,40 @@ import {
   IconButton,
   Link,
   useBreakpointValue,
+   Hide
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { SITE_NAME } from "../configuration/Config";
+import {
+  SITE_NAME
+} from "../configuration/Config";
 
-export const Logo = ({ onToggle, isOpen }: { onToggle: () => void; isOpen: boolean }) => {
+
+export const Logo = ({ onToggle, isOpen }: any) => {
   return (
     <HStack>
+      <>
       <Link
-        href={"/"}
-        textAlign={useBreakpointValue({ base: "center", md: "left" })}
-        fontFamily={"heading"}
-        color={useColorModeValue("gray.800", "white")}
-        _hover={{
-          textDecoration: "none",
-          color: useColorModeValue("gray.800", "white"),
-          bg: useColorModeValue("green.200", "green.900"),
-        }}
-      >
+          href={"/"}
+          textAlign={useBreakpointValue({ base: "center", md: "left" })}
+          fontFamily={"heading"}
+          color={useColorModeValue("gray.800", "white")}
+          _hover={{
+            textDecoration: "none",
+            color: useColorModeValue("gray.800", "white"),
+            bg: useColorModeValue("green.200", "green.900"),
+          }}
+        >
         <Image
           width={8}
           height={8}
-          alt={"Logo"}
+          alt={"Login Image"}
           objectFit={"cover"}
           src={"/logo.png"}
         />
-      </Link>
+            </Link>
+       <Show above='sm'> <Text as="kbd">{SITE_NAME}</Text></Show>
 
-      <Show above="sm">
-        <Text as="kbd">{SITE_NAME}</Text>
-      </Show>
-
-      {/* Hamburger menu for small screens */}
+          {/* Display hamburger icon on small screens */}
       <Show below="sm">
         <IconButton
           onClick={onToggle}
@@ -50,6 +52,8 @@ export const Logo = ({ onToggle, isOpen }: { onToggle: () => void; isOpen: boole
           aria-label={"Toggle Navigation"}
         />
       </Show>
+
+      </>
     </HStack>
   );
 };
@@ -72,6 +76,7 @@ export const SocialButton = ({
       cursor={"pointer"}
       as={"a"}
       href={href}
+      target={"_blank"}
       display={"inline-flex"}
       alignItems={"center"}
       justifyContent={"center"}

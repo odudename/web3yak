@@ -198,8 +198,10 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
   const handleToggle = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevents navigation on toggle
-    onToggle();
+    if (children) {
+      e.preventDefault(); // Only prevent default if there are children (dropdown)
+      onToggle(); // Toggle the submenu
+    }
   };
 
   return (
@@ -210,7 +212,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         href={href ?? "#"}
         justify={"space-between"}
         align={"center"}
-        onClick={(e) => !children && e.preventDefault()} // Only navigate if no children
+        onClick={handleToggle} // Toggle submenu only if children exist
         _hover={{
           textDecoration: "none",
         }}
@@ -225,32 +227,33 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
             transform={isOpen ? "rotate(180deg)" : ""}
             w={6}
             h={6}
-            onClick={handleToggle} // Toggle submenu without navigating
           />
         )}
       </Flex>
 
-      {/* Submenu collapse */}
-      <Collapse in={isOpen} animateOpacity>
-        <Stack
-          mt={2}
-          pl={4}
-          borderLeft={1}
-          borderStyle={"solid"}
-          borderColor={useColorModeValue("gray.200", "gray.700")}
-          align={"start"}
-        >
-          {children &&
-            children.map((child) => (
+      {/* Render submenu if there are children */}
+      {children && (
+        <Collapse in={isOpen} animateOpacity>
+          <Stack
+            mt={2}
+            pl={4}
+            borderLeft={1}
+            borderStyle={"solid"}
+            borderColor={useColorModeValue("gray.200", "gray.700")}
+            align={"start"}
+          >
+            {children.map((child) => (
               <Link key={child.label} py={2} href={child.href}>
                 {child.label}
               </Link>
             ))}
-        </Stack>
-      </Collapse>
+          </Stack>
+        </Collapse>
+      )}
     </Stack>
   );
 };
+
 
 
 const NAV_ITEMS: Array<NavItem> = [
