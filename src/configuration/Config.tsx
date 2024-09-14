@@ -2,7 +2,7 @@ import { ThemingProps } from '@chakra-ui/react'
 import { polygon} from '@wagmi/chains'
 
 export const SITE_NAME = 'Web3Yak Application'
-export const SITE_DESCRIPTION = 'YAK Name Service'
+export const SITE_DESCRIPTION = 'ODude Name Service'
 export const SITE_URL = 'https://www.web3yak.com/'
 
 export const THEME_INITIAL_COLOR = 'system'
