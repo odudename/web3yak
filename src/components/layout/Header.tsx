@@ -193,9 +193,12 @@ const MobileNav = () => {
   );
 };
 
-
 const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
+
+  // Move useColorModeValue out of the condition
+  const textColor = useColorModeValue("gray.600", "gray.200");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
 
   const handleToggle = (e: React.MouseEvent) => {
     if (children) {
@@ -217,7 +220,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           textDecoration: "none",
         }}
       >
-        <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
+        <Text fontWeight={600} color={textColor}>
           {label}
         </Text>
         {children && (
@@ -239,7 +242,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
             pl={4}
             borderLeft={1}
             borderStyle={"solid"}
-            borderColor={useColorModeValue("gray.200", "gray.700")}
+            borderColor={borderColor}
             align={"start"}
           >
             {children.map((child) => (
@@ -254,8 +257,6 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   );
 };
 
-
-
 const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Home",
@@ -265,6 +266,11 @@ const NAV_ITEMS: Array<NavItem> = [
         label: "ODude",
         subLabel: "ODude.com",
         href: "https://odude.com",
+      },
+      {
+        label: "Web3Yak",
+        subLabel: "Web3Yak.com",
+        href: "https://web3yak.com",
       },
       {
         label: "Web3Domain",

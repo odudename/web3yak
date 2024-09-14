@@ -20,12 +20,12 @@ export const NETWORKS = [polygon]; //polygon, filecoin, polygonMumbai
 export const NETWORK_ERROR = "Unsupported Blockchain Network" //Change network name as required
 
 //Domain Information. It only supports single domain name. 
-export const DOMAIN_TLDS = ['dude', 'yak']; // Array of TLDs
+export const DOMAIN_TLDS = ['dude', 'yak','usa']; // Array of TLDs
 export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/dude.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 137 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
-export const DOMAIN_DESCRIPTION = 'YAK Name service'
+export const DOMAIN_DESCRIPTION = 'ODude Name service'
 export const DOMAIN_TYPE = "W3D" //W3D for polygon, FVM for Filecoin net
-export const DOMAIN_TITLE = "Join our YAK Community" //Title above the search input field. 
+export const DOMAIN_TITLE = "Join our ODude Community" //Title above the search input field. 
 export const DOMAIN_PLACEHOLDER = "Search for a name" //Placeholder for search input field 
 
 //Admin wallet address of TLD mentioned at DOMAIN_TLD
