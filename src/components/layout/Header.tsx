@@ -52,6 +52,7 @@ export function Header(props: Props) {
       borderBottomWidth="small"
       borderBottomStyle="solid"
       borderBottomColor="white"
+      zIndex={9999}
     >
       <Flex flex={{ base: 2 }} justify={{ base: "center", md: "start" }}>
         <Logo onToggle={onToggle} isOpen={isOpen} />

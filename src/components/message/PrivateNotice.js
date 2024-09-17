@@ -143,7 +143,7 @@ export default function PrivateNotice() {
 
   return (
     <div>
-      <Button onClick={onOpen}><ChatIcon/></Button>
+      <Button onClick={onOpen} m='3'><ChatIcon/></Button>
 
       <Modal isOpen={isOpen} onClose={closeModal}>
         <ModalOverlay />
