@@ -1,4 +1,4 @@
-# Web3Yak dApp
+# FVM Web3Yak dApp
 ## _Become a Web3 Name provider_
 
 [![N|Solid](https://web3domain.org/studio/wp-content/uploads/banner.jpg)](https://web3domain.org/studio/)
