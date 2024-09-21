@@ -1,13 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-#Basic ignore files for live apps.
-/src/configuration/Config.tsx
-/public/favicon.ico
-/public/logo.png
-.gitignore
-
-
-
 # dependencies
 /node_modules
 /.pnp
