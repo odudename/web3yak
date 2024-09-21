@@ -48,3 +48,37 @@ export const TOKEN_SYMBOL= "$FIL" //Token symbol name eg. DOGE
 export const TOKEN_PRICE = "1" //Token price to mint
 export const TOKEN_DECIMAL = "18" //Decimal places of TOKEN_CONTRACT_ADDRESS or TOKEN_SYMBOL
 export const TOKEN_CONTRACT_ADDRESS=""
+
+
+
+// Menu
+// src/configuration/Config.tsx
+
+export const NAV_ITEMS = [
+  {
+    label: "Home",
+    href: "/",
+    children: [
+      {
+        label: "ODude",
+        subLabel: "ODude.com",
+        href: "https://odude.com",
+      },
+      {
+        label: "Web3Yak",
+        subLabel: "Web3Yak.com",
+        href: "https://web3yak.com",
+      },
+      {
+        label: "Web3Domain",
+        subLabel: "Web3Domain.org",
+        href: "https://web3domain.org",
+      },
+    ],
+  },
+  {
+    label: "Names",
+    href: "/list",
+  },
+];
+
