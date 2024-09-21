@@ -19,6 +19,9 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Logo } from "../../Reusables/helper";
 import { SITE_NAME } from "../../configuration/Config";
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons"; // Import icons
+import { NAV_ITEMS } from "../../configuration/Config";
+// Use NAV_ITEMS with the correct type
+const navItems: Array<NavItem> = NAV_ITEMS;
 
 interface Props {
   className?: string;
@@ -257,31 +260,3 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
     </Stack>
   );
 };
-
-const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Home",
-    href: "/",
-    children: [
-      {
-        label: "ODude",
-        subLabel: "ODude.com",
-        href: "https://odude.com",
-      },
-      {
-        label: "Web3Yak",
-        subLabel: "Web3Yak.com",
-        href: "https://web3yak.com",
-      },
-      {
-        label: "Web3Domain",
-        subLabel: "Web3Domain.org",
-        href: "https://web3domain.org",
-      },
-    ],
-  },
-  {
-    label: "Names",
-    href: "/list",
-  },
-];

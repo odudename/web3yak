@@ -12,7 +12,7 @@ export function Head(props: Props) {
       <title>{props.title ?? SITE_NAME}</title>
       <meta name="description" content={props.description ?? SITE_DESCRIPTION} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="author" content="ODude.com v1.0" />
+      <meta name="author" content="web3yak.com" />
     </NextHead>
     )
 }

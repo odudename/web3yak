@@ -34,24 +34,33 @@ const VisitPage = () => {
   const domain = visit ? String(visit).toLowerCase() : ""; // Ensure domain is in lowercase
   const { oldUri } = useDomainInfo(domain); // Use custom hook to fetch domain info
 
-  // Function to fetch and process JSON data from oldUri
-  const getJson = async (url) => {
-    try {
-      setIsLoading(true); // Set loading to true when starting to fetch data
-      const web2Url = transformIpfsUrl(url);
 
-      console.log("Fetching JSON from:", web2Url);
-      const response = await fetch(web2Url);
-      const json = await response.json();
+// Function to fetch and process JSON data from oldUri via the proxy
+const getJson = async (url) => {
+  try {
+    setIsLoading(true); // Set loading to true when starting to fetch data
+    const web2Url = transformIpfsUrl(url);
 
-      console.log("Fetched JSON data:", json);
-      processJson(json);
-    } catch (error) {
-      console.error("Error fetching JSON:", error);
-      //setIsLoading(false); // Stop loading on error
-      setRedirectType("Invalid"); // Mark as invalid
+    console.log("Fetching JSON via proxy for:", web2Url);
+
+    // Use the Next.js API route as a proxy to avoid CORS issues
+    const response = await fetch(`/api/proxy?url=${encodeURIComponent(web2Url)}`);
+
+    // Check for a valid response
+    if (!response.ok) {
+      throw new Error('Failed to fetch JSON via proxy');
     }
-  };
+
+    const json = await response.json();
+
+    console.log("Fetched JSON data:", json);
+    processJson(json);
+  } catch (error) {
+    console.error("Error fetching JSON via proxy:", error);
+    setRedirectType("Invalid"); // Mark as invalid
+  }
+};
+
 
   // Function to process the fetched JSON data
   const processJson = (jsonData) => {
