@@ -23,7 +23,7 @@ export const Logo = ({ onToggle, isOpen }: any) => {
     <HStack>
       <>
       <Link
-          href={"/#1.3"}
+          href={"/#1.4"}
           textAlign={useBreakpointValue({ base: "center", md: "left" })}
           fontFamily={"heading"}
           color={useColorModeValue("gray.800", "white")}

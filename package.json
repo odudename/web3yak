@@ -1,7 +1,7 @@
 {
   "name": "web3yak",
   "private": true,
-  "version": "1.2",
+  "version": "1.4",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -13,7 +13,7 @@
     "@chakra-ui/react": "^2.5.3",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
-    "@odude/odudename": "^1.0.3",
+    "@odude/oduderesolve": "^1.0.0",
     "@rainbow-me/rainbowkit": "^0.12.4",
     "framer-motion": "^10.9.1",
     "localforage": "^1.10.0",

@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from 'react';
-var w3d = require("@odude/odudename");
+var w3d = require("@odude/oduderesolve");
 import { FaEthereum } from "react-icons/fa";
 import {
   usePrepareContractWrite,
