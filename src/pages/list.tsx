@@ -15,7 +15,7 @@ import {
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { useNetworkValidation } from "../hooks/useNetworkValidation";
-var w3d = require("@odude/odudename");
+var w3d = require("@odude/oduderesolve");
 import { DOMAIN_TLDS } from "../configuration/Config";
 import Notice from "../components/domain/notice";
 
