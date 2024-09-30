@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useDomainValidation } from '../hooks/validate';
 import { useRouter } from "next/router";
-var w3d = require("@odude/odudename");
+var w3d = require("@odude/oduderesolve");
 import {
   Box,
   Button,
