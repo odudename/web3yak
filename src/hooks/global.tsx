@@ -1,14 +1,12 @@
 import { useToast , UseToastOptions } from "@chakra-ui/react";
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import {
-  TOKEN_DECIMAL
-} from "../configuration/Config";
 
+import { useLoadConfig } from "../hooks/useLoadConfig";
 
 function useGlobal() {
   const toast = useToast();
-
+  const { config, configLoading } = useLoadConfig();
   function showToast(title: string, description: string, status: UseToastOptions["status"]) {
 
     toast({
@@ -40,7 +38,18 @@ function useGlobal() {
   }
 
   async function getErcBalance(contractAddress: string, walletAddress: string, rpcUrl: string) {
+    
     try {
+
+       // Ensure config is loaded before continuing
+       if (configLoading) {
+        throw new Error('Config is still loading');
+      }
+
+      // Use config.TOKEN_DECIMAL instead of TOKEN_DECIMAL
+      const tokenDecimal = config.TOKEN_DECIMAL;
+
+
       //console.log(rpcUrl);
       // Connect to Ethereum using an appropriate provider
       const provider = new ethers.providers.JsonRpcProvider('https://polygon-mainnet.g.alchemy.com/v2/wdUDrkg1zZhHlYC-59w5qJCQWfO1InE7');
@@ -53,7 +62,7 @@ function useGlobal() {
       // Call balanceOf function of ERC20 contract to get balance
       const balanceBigNumber = await ercContract.balanceOf(walletAddress);
       // Convert balance to human-readable format
-      const balanceFormatted = ethers.utils.formatUnits(balanceBigNumber, TOKEN_DECIMAL);
+      const balanceFormatted = ethers.utils.formatUnits(balanceBigNumber, tokenDecimal );
 
       return balanceFormatted;
     } catch (error) {

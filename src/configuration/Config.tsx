@@ -52,7 +52,6 @@ export const TOKEN_CONTRACT_ADDRESS=""
 
 
 // Menu
-// src/configuration/Config.tsx
 
 export const NAV_ITEMS = [
     {

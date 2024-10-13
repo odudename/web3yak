@@ -81,9 +81,10 @@ import {
   DOMAIN_PRICE_SYMBOL,
 } from "../../../configuration/Config";
 
-const CONTRACT_ADDRESS = checkContract();
+
 
 export default function Info() {
+  const CONTRACT_ADDRESS = checkContract();
   const { isValidDomain, validateDomain } = useDomainValidation(); // Use the correct variable names
   const isNetworkValid = useNetworkValidation();
   const uniqueId = Math.round(Date.now() * Math.random()).toString();

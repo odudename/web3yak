@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { isValidMember } from "../../hooks/validate";
-import { ADMIN_WALLET, NOTICE_TITLE, NOTICE_NON_MEMBER } from "../../configuration/Config";
+import { useLoadConfig } from "../../hooks/useLoadConfig";
 import localforage from 'localforage';
 import {
   Modal,
@@ -43,6 +43,7 @@ export default function PrivateNotice() {
   const [modify, setModify] = useState(false);
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");
+  const { config, configLoading } = useLoadConfig();
 
   const setMembershipStatus = (key, status) => {
     localforage.setItem(key, status);
@@ -118,7 +119,12 @@ export default function PrivateNotice() {
         //console.log(test);
         //console.log(address);
         //console.log(ADMIN_WALLET);
-        if (address == ADMIN_WALLET) {
+          // Ensure config is loaded
+  if (configLoading) {
+    console.log("Configuration is loading...");
+    return null;
+  }
+        if (address == config.ADMIN_WALLET) {
           let addr = address?.toString();
           setMembershipStatus(addr, "ADMIN");
         }
@@ -141,6 +147,16 @@ export default function PrivateNotice() {
     // setNoticeData(jData);
   }, [modify]);
 
+      // If loading, show a loading state for the header
+      if (configLoading) {
+        return <div>Loading...</div>;
+      }
+    
+      // If config is missing or failed to load
+      if (!config) {
+        return <div>Error loading configuration.</div>;
+      }
+
   return (
     <div>
       <Button onClick={onOpen} m='3'><ChatIcon/></Button>
@@ -149,7 +165,7 @@ export default function PrivateNotice() {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
-            {NOTICE_TITLE} &nbsp;
+            {config.NOTICE_TITLE} &nbsp;
             {(!modify && status == "ADMIN") && isConnected ? <Button onClick={() => edit()}><AddIcon/></Button> : null}
           </ModalHeader>
           <ModalCloseButton />
@@ -217,7 +233,7 @@ export default function PrivateNotice() {
                 )}
               </>
             ) : (
-              <>{NOTICE_NON_MEMBER}</>
+              <>{config.NOTICE_NON_MEMBER}</>
             )}
           </ModalBody>
 

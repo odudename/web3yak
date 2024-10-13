@@ -2,14 +2,6 @@ import { useEffect, useState } from 'react';
 import { useContractReads } from 'wagmi';
 import abiFile from '../abiFile.json';
 import { useNetworkValidation, checkContract } from './useNetworkValidation';
-const contractAddress = checkContract();
-var CONTRACT_ADDRESS = ''; // No contract found
-    if (contractAddress) {
-      CONTRACT_ADDRESS = contractAddress;
-     // console.log(CONTRACT_ADDRESS);
-    } else {
-      console.log("No matching contract address found for the current chain.");
-    }
 
 function useDomainInfo(domainName: string) {
   const [domainId, setDomainId] = useState<number | null>(null);
@@ -17,6 +9,17 @@ function useDomainInfo(domainName: string) {
   const [oldUri, setOldUri] = useState<string | null>(null);
   const [erc20, setErc20] = useState<number | null>(null);
   const [listing_price, setAllow] = useState<number | null>(null);
+
+  // Call checkContract inside the function body
+  const contractAddress = checkContract(); 
+  let CONTRACT_ADDRESS = ''; 
+
+  if (contractAddress) {
+    CONTRACT_ADDRESS = contractAddress;
+  } else {
+    console.log("No matching contract address found for the current chain.");
+  }
+
   const { data, isError, isLoading } = useContractReads({
     contracts: [
       {
@@ -61,7 +64,6 @@ function useDomainInfo(domainName: string) {
       setErc20(dataArray[3]);
       setAllow(dataArray[4]);
     }
-   // console.log("am here");
   }, [data, isError]);
 
   return {
