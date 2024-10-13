@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Box, TableContainer, Table, Tbody, Tr, Td, Divider } from '@chakra-ui/react';
 import { CheckDomain } from '../CheckDomain';
-import { DOMAIN_PLACEHOLDER, DOMAIN_TLDS } from '../../configuration/Config'
+import { useLoadConfig } from '../../hooks/useLoadConfig';
+
 import { useDomainValidation } from '../../hooks/validate';
 import useGlobal from '../../hooks/global';
 const Search = () => {
+   // Load the configuration
+   const { config, configLoading } = useLoadConfig();
   const [value, setValue] = useState('');
   const [value2, setValue2] = useState('');
   const [value3, setValue3] = useState('');
@@ -18,7 +21,7 @@ const Search = () => {
 
 
   const process_domains = (param: string) => {
-    let processedParams = DOMAIN_TLDS.map(tld => {
+    let processedParams = config.DOMAIN_TLDS.map((tld: any) => {
       let processedParam = param.toLowerCase();
       if (!processedParam.endsWith(`.${tld}`)) {
         processedParam = `${param}.${tld}`;
@@ -72,14 +75,22 @@ const Search = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
-
+    // Check if the config is loading
+    if (configLoading) {
+      return <div>Loading...</div>; // Optionally, you can add a spinner or custom loading indicator
+    }
+  
+    // Handle case where config is null or not fully loaded
+    if (!config) {
+      return <div>Error loading configuration.</div>; // You can customize this error message
+    }
   return (
     <>
 
                 <Input
                   value={value}
                   onChange={(ev) => fetchData(ev.target.value)}
-                  placeholder={DOMAIN_PLACEHOLDER}
+                  placeholder={config.DOMAIN_PLACEHOLDER}
                   onFocus={handleInputFocus} // Handle onFocus event to hide Box
                   size='lg'
                 />
@@ -92,7 +103,7 @@ const Search = () => {
                       <Table size='md'>
 
                       <Tbody>
-              {process_domains(value).map((processedValue, index) => (
+              {process_domains(value).map((processedValue : any, index : any) => (
                 <Tr key={index}>
                   <Td>{processedValue}</Td>
                   <Td>-</Td>
