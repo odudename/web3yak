@@ -28,7 +28,8 @@ import {
   CardFooter,
   Image,
   Text,
-  useToast
+  useToast,
+  Spinner
 } from "@chakra-ui/react";
 import {
   Alert,
@@ -40,10 +41,10 @@ import {
   Divider
 } from '@chakra-ui/react'
 import { useAccount } from "wagmi";
-import { NETWORK_ERROR,DOMAIN_TYPE,DOMAIN_TLDS} from '../../../configuration/Config'
-
+import { useLoadConfig } from "../../../hooks/useLoadConfig";
 
 export default function Info() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
   const { address } = useAccount();
   const router = useRouter();
   const { reverse } = router.query;
@@ -61,7 +62,7 @@ export default function Info() {
 
   const { domainId, ownerAddress } = useDomainInfo(domain);
   const {
-    config,
+    config_c,
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareContractWrite({
@@ -70,7 +71,7 @@ export default function Info() {
     functionName: 'setReverse',
     args: [domainId],
   })
-  const { data, werror, isError, write } = useContractWrite(config)
+  const { data, werror, isError, write } = useContractWrite(config_c)
   // console.log(config);
 
   const { isWriteLoading, isSuccess } = useWaitForTransaction({
@@ -80,7 +81,7 @@ export default function Info() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-    return DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
   };
 
 
@@ -140,11 +141,11 @@ export default function Info() {
     // console.log(resolve.fvm_SmartContractAddress);  //Filecoin 
 
 
-    if (domain) {
+    if (domain && config) {
 
 
 
-      resolve.getDomain(address, DOMAIN_TYPE)
+      resolve.getDomain(address, config.DOMAIN_TYPE)
         .then(address => {
           setAddrDomain(address);
           setIsLoading(false);
@@ -157,7 +158,21 @@ export default function Info() {
 
 
     }
-  }, [domain, address]);
+  }, [domain, address, config]);
+
+   // Conditional rendering based on config loading state
+   if (configLoading) {
+    return (
+      <Flex align="center" justify="center" h="100vh">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
+
+  if (!config) {
+    return <div>Error loading configuration.</div>;
+  }
+
 
   return (
 
@@ -298,7 +313,7 @@ export default function Info() {
             </Stack>
           
         ) :
-          (<>{NETWORK_ERROR}</>)
+          (<>{config.NETWORK_ERROR}</>)
         }
       </Box>
       </Container>

@@ -28,10 +28,11 @@ import {
   IconButton,
   useClipboard,
   useDisclosure,
+  Spinner
 } from "@chakra-ui/react";
 import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
 import { useAccount } from "wagmi";
-import { DOMAIN_DESCRIPTION, DOMAIN_IMAGE_URL, DOMAIN_TLDS } from "../../../configuration/Config";
+import { useLoadConfig } from "../../../hooks/useLoadConfig";
 import {
   Modal,
   ModalOverlay,
@@ -42,6 +43,7 @@ import {
 import { ChevronRightIcon } from "@chakra-ui/icons"; // Assuming this is how ExternalLinkIcon is imported in your project
 
 export default function Info() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
   const { address } = useAccount();
   const { validateURL } = useURLValidation();
   const router = useRouter();
@@ -59,7 +61,7 @@ export default function Info() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-    return DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
   };
 
   //copy /@username
@@ -154,6 +156,8 @@ export default function Info() {
     }
   }, [jsonData]);
 
+  
+
   return (
     <Flex
       align="center"
@@ -229,7 +233,7 @@ export default function Info() {
                                   "ipfs://",
                                   ""
                                 )}.ipfs.nftstorage.link/`
-                              : jsonData?.img || DOMAIN_IMAGE_URL
+                              : jsonData?.img || config.DOMAIN_IMAGE_URL
                           }
                           alt={jsonData?.img}
                           onClick={() => enlarge()}
@@ -253,7 +257,7 @@ export default function Info() {
                                             "ipfs://",
                                             ""
                                           )}.ipfs.nftstorage.link/`
-                                        : jsonData?.img || DOMAIN_IMAGE_URL
+                                        : jsonData?.img || config.DOMAIN_IMAGE_URL
                                     }
                                     alt={jsonData?.name}
                                   />
@@ -372,7 +376,7 @@ export default function Info() {
                           <Heading size="md">Register {info}</Heading>
                         </CardHeader>
                         <CardBody>
-                          <Text>{DOMAIN_DESCRIPTION}</Text>
+                          <Text>{config.DOMAIN_DESCRIPTION}</Text>
                         </CardBody>
                         <CardFooter>
                           <div>

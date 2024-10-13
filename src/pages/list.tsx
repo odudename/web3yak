@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from "react";
 import { useAccount, useNetwork } from "wagmi";
-import localforage from 'localforage';
+import localforage from "localforage";
 import {
   Box,
   Container,
@@ -15,83 +15,84 @@ import {
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { useNetworkValidation } from "../hooks/useNetworkValidation";
-var w3d = require("@odude/oduderesolve");
-import { DOMAIN_TLDS } from "../configuration/Config";
+import { useLoadConfig } from "../hooks/useLoadConfig";
 import Notice from "../components/domain/notice";
-
 type DomainTuple = [string, string];
 
 export default function DomainList() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
   const { address } = useAccount();
   const { chain } = useNetwork();
   const [domainAddr, setDomainAddr] = useState<DomainTuple[]>([]);
-  const [error, setError] = useState(""); // Specify the type for error state
+  const [error, setError] = useState(""); 
   const [isLoading, setIsLoading] = useState(true);
-  const domainTlds = DOMAIN_TLDS.map(tld => "." + tld); // Array of TLDs with dot
   const isNetworkValid = useNetworkValidation();
 
   const setMembershipStatus = (key: string, status: string) => {
     localforage.setItem(key, status);
   };
 
-
-  const fetchDataIfNetworkValid = () => {
-    if (isNetworkValid) {
+  // Moved w3d import inside useEffect to ensure config is loaded first
+  useEffect(() => {
+    // Ensure that config and the network are valid before proceeding
+    if (config && isNetworkValid && address && chain) {
       setIsLoading(true);
 
       const settings = {
         matic_rpc_url: process.env.NEXT_PUBLIC_MATIC,
         eth_rpc_url: process.env.NEXT_PUBLIC_ETH,
         fvm_rpc_url: process.env.NEXT_PUBLIC_FILECOIN,
-        wallet_pvt_key: process.env.NEXT_PUBLIC_PVT_KEY
+        wallet_pvt_key: process.env.NEXT_PUBLIC_PVT_KEY,
       };
+
+      // Dynamically load w3d once the config is available
+      const w3d = require("@odude/oduderesolve");
       const resolve = new w3d(settings);
-      
 
       let provider = "";
-      if (chain) {
-        if (chain?.network === "filecoin-mainnet") {
-          provider = "fvm";
-          // console.log(provider);
-        }
+      if (chain?.network === "filecoin-mainnet") {
+        provider = "fvm";
       }
 
-      if (address) {
-        resolve
-          .getDomainList(address, provider)
-          .then((data: DomainTuple[]) => {
-            // Filter records that end with the specified domain_tld
-            const filteredDomainAddr = data.filter((item) =>
-              domainTlds.some(tld => item[1].endsWith(tld)) ||
-            DOMAIN_TLDS.includes(item[1])
-            );
-            setDomainAddr(filteredDomainAddr);
-          })
-          .catch((err: Error) => {
-            setError(err.message);
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      }
+      // Fetch the domain list if the user has an address
+      resolve
+        .getDomainList(address, provider)
+        .then((data: DomainTuple[]) => {
+          const filteredDomainAddr = data.filter((item) =>
+            config.DOMAIN_TLDS.some((tld: string) => item[1].endsWith(tld)) ||
+            config.DOMAIN_TLDS.includes(item[1])
+          );
+          setDomainAddr(filteredDomainAddr);
+        })
+        .catch((err: any) => {
+          setError(err.message);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
-  };
+  }, [config, isNetworkValid, address, chain]);
 
   useEffect(() => {
-    fetchDataIfNetworkValid();
-  }, [address, chain]);
-
-  useEffect(() => {
-    if (domainAddr.length != 0  && address) {
-      // Set membership status
-     // Use the function to set membership status
-     let addr = address?.toString();
-     setMembershipStatus(addr, "GOLD");
-     console.log("Value is set "+addr);
-    };
+    if (domainAddr.length !== 0 && address) {
+      const addr = address?.toString();
+      setMembershipStatus(addr, "GOLD");
+      console.log("Value is set " + addr);
+    }
   }, [domainAddr, address]);
 
+  // Conditional rendering based on config loading state
+  if (configLoading) {
+    return (
+      <Flex align="center" justify="center" h="100vh">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
 
+  if (!config) {
+    return <div>Error loading configuration.</div>;
+  }
 
   return (
     <Flex
@@ -139,8 +140,8 @@ export default function DomainList() {
                   <>
                     {error ? (
                       <>Error: {error}</>
-                    ) : domainAddr.length === 0 ? ( // Check if the domainAddr array is empty
-                      <>No Record Found</> // Display the message when the array is empty
+                    ) : domainAddr.length === 0 ? (
+                      <>No Record Found</>
                     ) : (
                       <SimpleGrid
                         columns={{ sm: 2, md: 4 }}

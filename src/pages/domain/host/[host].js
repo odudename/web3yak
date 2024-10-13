@@ -60,9 +60,9 @@ import {
 } from "@chakra-ui/react";
 import { FaExternalLinkAlt, FaForward, FaLink } from "react-icons/fa";
 import { useAccount } from "wagmi";
-import { NETWORK_ERROR, DOMAIN_IMAGE_URL, DOMAIN_TLDS } from "../../../configuration/Config";
-
+import { useLoadConfig } from "../../../hooks/useLoadConfig";
 export default function Info() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
   const { address } = useAccount();
   const { validateURL } = useURLValidation();
   const isNetworkValid = useNetworkValidation();
@@ -99,7 +99,7 @@ export default function Info() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-    return DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
   };
 
   const handleSubmit = (event) => {
@@ -223,7 +223,7 @@ export default function Info() {
   useEffect(() => {
     setIsMainLoading(true); // Set isLoading to true whenever the effect runs
 
-    if (domain) {
+    if (domain, config) {
       const randomNumber = Math.random();
       const url =
         "https://web3domain.org/endpoint/v1/index.php?domain=" +
@@ -245,7 +245,7 @@ export default function Info() {
 
       fetchData();
     }
-  }, [domain]);
+  }, [domain, config]);
 
   useEffect(() => {
     if (flag) {
@@ -331,6 +331,10 @@ export default function Info() {
     }
     //console.log(visitUrl);
   }, [visitUrl, web3Url, web2Url, validateURL]);
+
+  if (!config) {
+    return <div>Error loading configuration.</div>;
+  }
 
   return (
     <Flex
@@ -756,7 +760,7 @@ export default function Info() {
                 )}
               </Stack>
             ) : (
-              <>{NETWORK_ERROR}</>
+              <>{config.NETWORK_ERROR}</>
             )}
           </Box>
         </Container>

@@ -2,6 +2,18 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ethers } from "ethers";
+import {
+  DOMAIN,
+  DOMAIN_IMAGE_URL,
+  DOMAIN_NETWORK_CHAIN,
+  DOMAIN_DESCRIPTION,
+  NETWORK_ERROR,
+  TOKEN_CONTRACT_ADDRESS,
+  TOKEN_SYMBOL,
+  TOKEN_PRICE,
+  TOKEN_DECIMAL,
+  DOMAIN_PRICE_SYMBOL,
+} from "../../../configuration/Config";
 import { generateJson } from "../../../hooks/ipfs";
 import { useDomainValidation } from "../../../hooks/validate";
 import useGlobal from "../../../hooks/global";
@@ -68,25 +80,17 @@ import {
 
 import { Grid, GridItem } from "@chakra-ui/react";
 
-import {
-  DOMAIN,
-  DOMAIN_IMAGE_URL,
-  DOMAIN_NETWORK_CHAIN,
-  DOMAIN_DESCRIPTION,
-  NETWORK_ERROR,
-  TOKEN_CONTRACT_ADDRESS,
-  TOKEN_SYMBOL,
-  TOKEN_PRICE,
-  TOKEN_DECIMAL,
-  DOMAIN_PRICE_SYMBOL,
-} from "../../../configuration/Config";
+
 
 
 
 export default function Info() {
-  const CONTRACT_ADDRESS = checkContract();
-  const { isValidDomain, validateDomain } = useDomainValidation(); // Use the correct variable names
+
+
+  
+  const { isValidDomain, validateDomain } = useDomainValidation();
   const isNetworkValid = useNetworkValidation();
+
   const uniqueId = Math.round(Date.now() * Math.random()).toString();
   const { address, connector, isConnected } = useAccount();
   const [ethBalance, setEthBalance] = useState("0.00"); // State to store the ETH balance
@@ -101,6 +105,9 @@ export default function Info() {
     "0x8D714B10B719c65B878F2Ed1436A964E11fA3271"
   );
   //console.log(domain);
+
+
+
   const [claimUrl, setClaimUrl] = useState(
     "https://web3domain.org/endpoint/temp_json.php?domain=" +
       domain +
@@ -119,9 +126,9 @@ export default function Info() {
   const overrides = erc20
     ? {} // Empty object for ERC20 (no ETH required)
     : { value: ethers.utils.parseEther(TOKEN_PRICE) }; // Using ETH
-
+    const CONTRACT_ADDRESS = checkContract();
   const {
-    config,
+    config_c,
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareContractWrite({
@@ -132,7 +139,7 @@ export default function Info() {
     overrides, // Apply conditional overrides
   });
 
-  const { data, error, isError, write } = useContractWrite(config);
+  const { data, error, isError, write } = useContractWrite(config_c);
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
@@ -155,7 +162,7 @@ const { getErcBalance } = useGlobal(); // Initialize hooks
   //console.log( allowance.toString());
 
   // Prepare contract write for approval only if needed
-  const { config: approveConfig } = usePrepareContractWrite({
+  const { config_c: approveConfig } = usePrepareContractWrite({
     address: TOKEN_CONTRACT_ADDRESS,
     abi: ercabi.abi,
     functionName: "approve",

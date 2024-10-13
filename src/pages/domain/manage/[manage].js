@@ -67,14 +67,10 @@ import {
   FaExternalLinkAlt,
   FaLink,
 } from "react-icons/fa";
-import {
-  DOMAIN_IMAGE_URL,
-  DOMAIN_DESCRIPTION,
-  NETWORK_ERROR,
-  DOMAIN_TLDS
-} from "../../../configuration/Config";
+import { useLoadConfig } from "../../../hooks/useLoadConfig";
 
 export default function Manage() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
   const { address } = useAccount();
   const router = useRouter();
   const { manage } = router.query;
@@ -86,7 +82,7 @@ export default function Manage() {
   const [jsonDataNew, setJsonDataNew] = useState(null); // Initialize jsonData as null
   const { getValue } = useJsonValue(jsonData);
   const [claimUrl, setClaimUrl] = useState("http://web3domain.org");
-  const [image, setImage] = useState(DOMAIN_IMAGE_URL);
+  const [image, setImage] = useState('');
   const [isMainLoading, setIsMainLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState("");
@@ -126,7 +122,7 @@ export default function Manage() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-    return DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
   };
 
   const handleUpload = async () => {
@@ -208,7 +204,7 @@ export default function Manage() {
 
     const array = {
       name: manage,
-      description: DOMAIN_DESCRIPTION,
+      description: config.DOMAIN_DESCRIPTION,
       image: image,
       attributes: [
         { trait_type: "domain", value: manage },
@@ -278,13 +274,14 @@ export default function Manage() {
   useEffect(() => {
     setIsMainLoading(true);
     const randomNumber = Math.random(); // Generate a random number
-    if (domain) {
+    if (domain && config) {
       const url =
         "https://web3domain.org/endpoint/v1/index.php?domain=" +
         domain +
         "&update=yes&" +
         randomNumber;
       console.log(url);
+      setImage(config.DOMAIN_IMAGE_URL);
       const fetchData = async () => {
         try {
           const response = await fetch(url);
@@ -298,7 +295,7 @@ export default function Manage() {
       };
       fetchData();
     }
-  }, [domain]);
+  }, [domain, config]);
 
   useEffect(() => {
     if (jsonData) {
@@ -387,7 +384,9 @@ export default function Manage() {
     get_cid_of_layout();
   }, [flag]);
 
-
+  if (!config) {
+    return <div>Error loading configuration.</div>;
+  }
 
   return (
     <Flex
@@ -816,7 +815,7 @@ export default function Manage() {
               </Stack>
             </Stack>
           ) : (
-            <>{NETWORK_ERROR}</>
+            <>{config.NETWORK_ERROR}</>
           )}
         </Box>
       </Container>

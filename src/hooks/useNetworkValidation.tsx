@@ -4,7 +4,7 @@ import { useLoadConfig } from "../hooks/useLoadConfig";
 function useNetworkValidation() {
   const { isConnected } = useAccount();
   const { chain } = useNetwork();
-  const { config, configLoading } = useLoadConfig(); // Correct place to call the hook
+  const { config, configLoading } = useLoadConfig(); 
 
   // Ensure config is loaded before proceeding
   if (configLoading) {

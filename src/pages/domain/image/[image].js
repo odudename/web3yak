@@ -52,10 +52,10 @@ import {
 } from '@chakra-ui/react'
 import { FaCopy, FaExternalLinkAlt, FaForward } from "react-icons/fa";
 import { useAccount, useNetwork } from "wagmi";
-import { NETWORK_ERROR, DOMAIN_IMAGE_URL, SITE_URL, DOMAIN_TLDS } from '../../../configuration/Config'
-
+import { useLoadConfig } from "../../../hooks/useLoadConfig";
 
 export default function Info() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
   const { isConnected, connector, address } = useAccount();
   const { validateURL } = useURLValidation();
   const isNetworkValid = useNetworkValidation();
@@ -70,9 +70,11 @@ export default function Info() {
   const [isLoading, setIsLoading] = useState(false);
   const [isMainLoading, setIsMainLoading] = useState(true);
   const [newUrl, setNewUrl] = useState('');
-  const [nftImage, setNftImage] = useState(DOMAIN_IMAGE_URL);
+  const [nftImage, setNftImage] = useState(''); // Initialize with an empty string
+
   const [jsonDataNew, setJsonDataNew] = useState(null); // Initialize jsonDataNew as null
   const [show, setShow] = useState(false);
+  let firstImg = '';
 
  // let firstImg=jsonData?.image && jsonData.image.startsWith("ipfs://") ? jsonData.image.replace("ipfs://", "https://ipfs.io/ipfs/") : jsonData?.image;
   
@@ -81,10 +83,9 @@ export default function Info() {
 
 const isDomainMatched = (domain) => {
   // Check if the domain is an exact match or ends with any of the TLDs
-  return DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+  return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
 };
  
-let firstImg = jsonData?.image && jsonData.image.startsWith("ipfs://") ? `https://web3domain.org/ipfs/${jsonData.image.replace("ipfs://","")}` : jsonData?.image || DOMAIN_IMAGE_URL;
 
 
   const handleSubmit = (event) => {
@@ -125,7 +126,7 @@ const updatedJsonData = {
 
     const key = '100';
 
-    const imageContent = await generateImage(domainName, key, SITE_URL);
+    const imageContent = await generateImage(domainName, key, config.SITE_URL);
     if (imageContent) {
       console.log('Image content:', imageContent);
       // Parse the JSON string into a JavaScript object
@@ -184,8 +185,11 @@ console.log('Parsed Image URL:', parsedContent.url);
 
     setIsMainLoading(true); // Set isLoading to true whenever the effect runs
 
-    if (domain) {
+    if (domain && config) {
       const randomNumber = Math.random();
+    
+      firstImg = jsonData?.image && jsonData.image.startsWith("ipfs://") ? `https://web3domain.org/ipfs/${jsonData.image.replace("ipfs://","")}` : jsonData?.image || config.DOMAIN_IMAGE_URL;
+
       const url = "https://web3domain.org/endpoint/v1/index.php?domain=" + domain + "&" + randomNumber;
       // console.log(url);
       const fetchData = async () => {
@@ -195,6 +199,14 @@ console.log('Parsed Image URL:', parsedContent.url);
           setJsonData(json); // Store the json response in the component's state
           setIsMainLoading(false);
            console.log(json);
+
+           if (json.image) {
+            setNftImage(firstImg);
+          } else {
+            setNftImage(config.DOMAIN_IMAGE_URL); // Fallback to config image URL
+          }
+
+
         } catch (error) {
           console.log("error", error);
         }
@@ -203,9 +215,12 @@ console.log('Parsed Image URL:', parsedContent.url);
       fetchData();
 
     }
-  }, [domain]);
+  }, [domain,config]);
 
- 
+  if (!config) {
+    return <div>Error loading configuration.</div>;
+  }
+
   return (
 
     <Flex
@@ -267,7 +282,7 @@ console.log('Parsed Image URL:', parsedContent.url);
                               variant='outline'
                               align='center'
                             >
-{nftImage == DOMAIN_IMAGE_URL ?  (
+{nftImage == config.DOMAIN_IMAGE_URL ?  (
                               <Image
                                 ml={2}
                                 boxSize='200px'
@@ -285,7 +300,7 @@ console.log('Parsed Image URL:', parsedContent.url);
                               )}
                               <Stack>
                                 <CardBody>
-                                {nftImage == DOMAIN_IMAGE_URL ?  (
+                                {nftImage == config.DOMAIN_IMAGE_URL ?  (
 
 
                                 <Button size="sm" variant='solid' colorScheme='blue' onClick={() => updateImage()}>
@@ -357,7 +372,7 @@ console.log('Parsed Image URL:', parsedContent.url);
 
               </Stack>
             ) :
-              (<>{NETWORK_ERROR}</>)
+              (<>{config.NETWORK_ERROR}</>)
             }
           </Box>
         </Container>
