@@ -20,6 +20,9 @@ const Home: NextPage = () => {
   // Load the configuration
   const { config, configLoading } = useLoadConfig();
 
+  const bgColor = useColorModeValue("white", "gray.700");
+  const textColor = useColorModeValue("gray.700", "whiteAlpha.900");
+
     // Check if the config is loading
     if (configLoading) {
       return <div>Loading...</div>; // Optionally, you can add a spinner or custom loading indicator
@@ -34,9 +37,9 @@ const Home: NextPage = () => {
 <Flex
   align="center"
   justify="center"
-  bg={useColorModeValue("white", "gray.700")}
+  bg={bgColor}
   borderRadius="md"
-  color={useColorModeValue("gray.700", "whiteAlpha.900")}
+  color={textColor}
   shadow="base"
 >
   <Box

@@ -1,32 +1,45 @@
 import React from 'react'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIAL_TWITTER } from '../configuration/Config'
+import { useLoadConfig } from '../hooks/useLoadConfig';
 import { DefaultSeo } from 'next-seo'
 
 export default function Seo() {
-  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL
+  const { config, configLoading } = useLoadConfig();
+  // Check if the config is loading
+if (configLoading) {
+  return <div>Loading...</div>;
+}
+
+// Handle case where config is null or not fully loaded
+if (!config) {
+  return <div>Error loading configuration.</div>;
+}
+
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : config.SITE_URL
+
+
 
   return (
     <DefaultSeo
-      title={SITE_NAME}
-      defaultTitle={SITE_NAME}
-      titleTemplate={`%s | ${SITE_NAME}`}
-      description={SITE_DESCRIPTION}
+      title={config.SITE_NAME}
+      defaultTitle={config.SITE_NAME}
+      titleTemplate={`%s | ${config.SITE_NAME}`}
+      description={config.SITE_DESCRIPTION}
       defaultOpenGraphImageWidth={1200}
       defaultOpenGraphImageHeight={630}
       openGraph={{
         type: 'website',
-        siteName: SITE_NAME,
+        siteName: config.SITE_NAME,
         url: origin,
         images: [
           {
             url: `${origin}/og.png`,
-            alt: `${SITE_NAME} Open Graph Image`,
+            alt: `${config.SITE_NAME} Open Graph Image`,
           },
         ],
       }}
       twitter={{
-        handle: `@${SOCIAL_TWITTER}`,
-        site: `@${SOCIAL_TWITTER}`,
+        handle: `@${config.SOCIAL_TWITTER}`,
+        site: `@${config.SOCIAL_TWITTER}`,
         cardType: 'summary_large_image',
       }}
     />

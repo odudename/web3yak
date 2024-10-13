@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import NextLink from 'next/link'
 import { Link, useColorModeValue } from '@chakra-ui/react'
-import { THEME_COLOR_SCHEME } from '../configuration/Config'
+import { useLoadConfig } from '../hooks/useLoadConfig';
 
 interface Props {
   href: string
@@ -11,9 +11,32 @@ interface Props {
 }
 
 export function LinkComponent(props: Props) {
-  const className = props.className ?? ''
-  const isExternal = props.href.match(/^([a-z0-9]*:|.{0})\/\/.*$/) || props.isExternal
-  const color = useColorModeValue(`${THEME_COLOR_SCHEME}.600`, `${THEME_COLOR_SCHEME}.400`)
+    // Load the configuration
+    const { config, configLoading } = useLoadConfig();
+
+     // Define the className and isExternal variables at the top
+  const className = props.className ?? '';
+  const isExternal = props.href.match(/^([a-z0-9]*:|.{0})\/\/.*$/) || props.isExternal;
+
+  // Define the color hook outside of any conditional return
+  const defaultColorScheme = 'blue'; // Fallback in case config is not available
+  const color = useColorModeValue(
+    `${config?.THEME_COLOR_SCHEME || defaultColorScheme}.600`,
+    `${config?.THEME_COLOR_SCHEME || defaultColorScheme}.400`
+  );
+
+    // Check if the config is loading
+    if (configLoading) {
+      return <div>Loading...</div>;
+    }
+  
+    // Handle case where config is null or not fully loaded
+    if (!config) {
+      return <div>Error loading configuration.</div>;
+    }
+
+
+
 
   if (isExternal) {
     return (

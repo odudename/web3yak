@@ -17,11 +17,8 @@ import {
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Logo } from "../../Reusables/helper";
-import { SITE_NAME } from "../../configuration/Config";
+import { useLoadConfig } from '../../hooks/useLoadConfig';
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons"; // Import icons
-import { NAV_ITEMS } from "../../configuration/Config";
-// Use NAV_ITEMS with the correct type
-const navItems: Array<NavItem> = NAV_ITEMS;
 
 interface Props {
   className?: string;
@@ -37,13 +34,32 @@ interface NavItem {
 export function Header(props: Props) {
   const className = props.className ?? "";
   const { isOpen, onToggle } = useDisclosure(); // Manage the mobile menu state here
+  const { config, configLoading } = useLoadConfig();
+
+  // Move all hook calls to the top level of the component
+  const bg = useColorModeValue("gray.50", "gray.900");
+  const color = useColorModeValue("gray.700", "gray.200");
+  const borderBottomColor = useColorModeValue("white", "gray.900");
+
+  // Handle case where config is still loading or not available
+  const navItems: Array<NavItem> = config?.NAV_ITEMS ?? [];
+
+  // If loading, show a loading state for the header
+  if (configLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // If config is missing or failed to load
+  if (!config) {
+    return <div>Error loading configuration.</div>;
+  }
 
   return (
     <Flex
       as="header"
       className={className}
-      bg={useColorModeValue("gray.50", "gray.900")}
-      color={useColorModeValue("gray.700", "gray.200")}
+      bg={bg}
+      color={color}
       opacity={1}
       px={4}
       py={2}
@@ -54,13 +70,13 @@ export function Header(props: Props) {
       borderBottom="1px"
       borderBottomWidth="small"
       borderBottomStyle="solid"
-      borderBottomColor="white"
+      borderBottomColor={borderBottomColor}
       zIndex={9999}
     >
       <Flex flex={{ base: 2 }} justify={{ base: "center", md: "start" }}>
         <Logo onToggle={onToggle} isOpen={isOpen} />
         <Flex display={{ base: "none", md: "flex" }} ml={10}>
-          <DesktopNav />
+          <DesktopNav navItems={navItems} />
         </Flex>
       </Flex>
 
@@ -82,13 +98,13 @@ export function Header(props: Props) {
 
       {/* Mobile navigation controlled by isOpen */}
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <MobileNav navItems={navItems} />
       </Collapse>
     </Flex>
   );
 }
 
-const DesktopNav = () => {
+const DesktopNav = ({ navItems }: { navItems: Array<NavItem> }) => {
   const linkColor = useColorModeValue("gray.600", "gray.200");
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
@@ -96,7 +112,7 @@ const DesktopNav = () => {
 
   return (
     <Stack direction={"row"} spacing={8}>
-      {NAV_ITEMS.map((navItem) => (
+      {navItems.map((navItem) => (
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
@@ -178,19 +194,19 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   );
 };
 
-const MobileNav = () => {
+const MobileNav = ({ navItems }: { navItems: Array<NavItem> }) => {
   return (
     <Stack
-      position="absolute"  // Add absolute positioning
-      top="60px"           // Adjust this based on your header's height
+      position="absolute" // Add absolute positioning
+      top="60px" // Adjust this based on your header's height
       left="0"
-      width="50%"         // Ensure the menu takes full width of the screen
+      width="50%" // Ensure the menu takes full width of the screen
       bg={useColorModeValue("white", "gray.800")}
       p={4}
       display={{ md: "none" }}
-      zIndex={99}          // Ensure the menu is on top of other elements
+      zIndex={99} // Ensure the menu is on top of other elements
     >
-      {NAV_ITEMS.map((navItem) => (
+      {navItems.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
     </Stack>
@@ -200,7 +216,6 @@ const MobileNav = () => {
 const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
-  // Move useColorModeValue out of the condition
   const textColor = useColorModeValue("gray.600", "gray.200");
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
@@ -238,7 +253,6 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         )}
       </Flex>
 
-      {/* Render submenu if there are children */}
       {children && (
         <Collapse in={isOpen} animateOpacity>
           <Stack

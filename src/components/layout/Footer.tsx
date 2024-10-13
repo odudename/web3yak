@@ -16,14 +16,7 @@ import {
   FaMedium,
   FaTwitter,
 } from "react-icons/fa";
-import {
-  SITE_DESCRIPTION,
-  SOCIAL_GITHUB,
-  SOCIAL_LINKEDIN,
-  SOCIAL_MEDIUM,
-  SOCIAL_TWITTER,
-  SOCIAL_DISCORD,
-} from "../../configuration/Config";
+import { useLoadConfig } from "../../hooks/useLoadConfig";
 import { NetworkStatus } from "../NetworkStatus";
 import { Logo, SocialButton } from "../../Reusables/helper";
 
@@ -32,11 +25,26 @@ interface Props {
 }
 
 export function Footer(props: Props) {
+  const { config, configLoading } = useLoadConfig();
+  const textAlign = useBreakpointValue({ base: "center", md: "left" });
+  const textColor = useColorModeValue("gray.800", "white");
+  const hoverBg = useColorModeValue("green.200", "green.900");
+  const bg=useColorModeValue("gray.50", "gray.900");
+  const color=useColorModeValue("gray.700", "gray.200")
+    // If loading, show a loading state for the header
+    if (configLoading) {
+      return <div>Loading...</div>;
+    }
+  
+    // If config is missing or failed to load
+    if (!config) {
+      return <div>Error loading configuration.</div>;
+    }
   const className = props.className ?? "";
   return (
     <Box
-      bg={useColorModeValue("gray.50", "gray.900")}
-      color={useColorModeValue("gray.700", "gray.200")}
+      bg={bg}
+      color={color}
       pos="fixed"
       w="full"
       borderTop="1px"
@@ -55,18 +63,18 @@ export function Footer(props: Props) {
         align={{ base: "center", md: "center" }}
       >
         <Text as="samp" hideBelow="md">
-          {SITE_DESCRIPTION}
+          {config.SITE_DESCRIPTION}
         </Text>
         <Link
           hideBelow="md"
           href={"/"}
-          textAlign={useBreakpointValue({ base: "center", md: "left" })}
+          textAlign={textAlign as any}
           fontFamily={"heading"}
-          color={useColorModeValue("gray.800", "white")}
+          color={textColor}
           _hover={{
             textDecoration: "none",
-            color: useColorModeValue("gray.800", "white"),
-            bg: useColorModeValue("green.200", "green.900"),
+            color: {textColor},
+            bg: {hoverBg},
           }}
         >
              <Image
@@ -78,46 +86,46 @@ export function Footer(props: Props) {
         />
         </Link>
         <Stack direction={"row"} spacing={6}>
-          {SOCIAL_TWITTER && SOCIAL_TWITTER !== undefined && (
+          {config.SOCIAL_TWITTER && config.SOCIAL_TWITTER !== undefined && (
             <SocialButton
               label={"Twitter"}
-              href={`https://twitter.com/${SOCIAL_TWITTER}`}
+              href={`https://twitter.com/${config.SOCIAL_TWITTER}`}
             >
               <FaTwitter />
             </SocialButton>
           )}
 
-          {SOCIAL_MEDIUM && SOCIAL_MEDIUM !== undefined && (
+          {config.SOCIAL_MEDIUM && config.SOCIAL_MEDIUM !== undefined && (
             <SocialButton
               label={"Medium"}
-              href={`https://medium.com/${SOCIAL_MEDIUM}`}
+              href={`https://medium.com/${config.SOCIAL_MEDIUM}`}
             >
               <FaMedium />
             </SocialButton>
           )}
 
-          {SOCIAL_GITHUB && SOCIAL_GITHUB !== undefined && (
+          {config.SOCIAL_GITHUB && config.SOCIAL_GITHUB !== undefined && (
             <SocialButton
               label={"Github"}
-              href={`https://github.com/${SOCIAL_GITHUB}`}
+              href={`https://github.com/${config.SOCIAL_GITHUB}`}
             >
               <FaGithub />
             </SocialButton>
           )}
 
-          {SOCIAL_DISCORD && SOCIAL_DISCORD !== undefined && (
+          {config.SOCIAL_DISCORD && config.SOCIAL_DISCORD !== undefined && (
             <SocialButton
               label={"Discord"}
-              href={`https://discord.com/channels/${SOCIAL_DISCORD}`}
+              href={`https://discord.com/channels/${config.SOCIAL_DISCORD}`}
             >
               <FaDiscord />
             </SocialButton>
           )}
 
-          {SOCIAL_LINKEDIN && SOCIAL_LINKEDIN !== undefined && (
+          {config.SOCIAL_LINKEDIN && config.SOCIAL_LINKEDIN !== undefined && (
             <SocialButton
               label={"LinkedIn"}
-              href={`https://www.linkedin.com/in/${SOCIAL_LINKEDIN}`}
+              href={`https://www.linkedin.com/in/${config.SOCIAL_LINKEDIN}`}
             >
               <FaLinkedin />
             </SocialButton>

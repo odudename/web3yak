@@ -5,14 +5,26 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
-import { NETWORK_ERROR } from "../../configuration/Config";
+import { useLoadConfig } from '../../hooks/useLoadConfig';
 
 const Notice = () => {
+  const { config, configLoading } = useLoadConfig();
+
+  // Check if the config is loading
+if (configLoading) {
+  return <div>Loading...</div>;
+}
+
+// Handle case where config is null or not fully loaded
+if (!config) {
+  return <div>Error loading configuration.</div>;
+}
+
   return (
     <Alert status="error">
       <AlertIcon />
       <AlertTitle>Wallet Notice:</AlertTitle>
-      <AlertDescription>{NETWORK_ERROR}</AlertDescription>
+      <AlertDescription>{config.NETWORK_ERROR}</AlertDescription>
     </Alert>
   );
 };
