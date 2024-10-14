@@ -9,14 +9,14 @@ import {
 import abiFile from '../abiFile.json';
 import { ethers } from 'ethers';
 import { Button, useToast } from "@chakra-ui/react";
-import { checkContract } from '../hooks/useNetworkValidation';
+import { useNetworkValidation } from "../hooks/useNetworkValidation";
 import useGlobal from '../hooks/global';
 
 function TokenURI({ domainName, TokenURI }: { domainName: string; TokenURI: string }) {
   const { domainId, ownerAddress, oldUri } = useDomainInfo(domainName);
   const { showToast } = useGlobal();
   const [hasUpdated, setHasUpdated] = useState(false); // Flag to prevent repeated execution
-  const contractAddress = checkContract();
+  const { isValid, contractAddress } = useNetworkValidation(); // Get the contract address and validation status
 
 var CONTRACT_ADDRESS = ''; // No contract found
     if (contractAddress) {

@@ -1,7 +1,8 @@
 import React from "react";
 
 import Search from "../../components/domain/Search";
-import {DOMAIN_TITLE} from "../../configuration/Config";
+
+import { useLoadConfig } from "../../hooks/useLoadConfig";
 import {
   Box,
   Container,
@@ -9,8 +10,22 @@ import {
   Heading,
   Stack,
   useColorModeValue,
+  Spinner
 } from "@chakra-ui/react";
 export default function SearchPage() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
+    // Conditional rendering based on config loading state
+    if (configLoading) {
+      return (
+        <Flex align="center" justify="center" h="100vh">
+          <Spinner size="xs" />
+        </Flex>
+      );
+    }
+  
+    if (!config) {
+      return <div>Error loading configuration.</div>;
+    }
   return (
     <>
       <Flex
@@ -42,7 +57,7 @@ export default function SearchPage() {
             >
               <div>
                 <Heading as="h2" fontSize="2xl" my={1}>
-                  {DOMAIN_TITLE}
+                  {config.DOMAIN_TITLE}
                 </Heading>
                 <p>
                   <Search />

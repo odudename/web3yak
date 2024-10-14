@@ -10,10 +10,7 @@ import {
 } from "wagmi";
 import abiFile from "../../../abiFile.json";
 import useDomainInfo from "../../../hooks/domainInfo";
-import {
-  useNetworkValidation,
-  checkContract,
-} from "../../../hooks/useNetworkValidation";
+import { useNetworkValidation } from "../../../hooks/useNetworkValidation";
 import {
   Box,
   Button,
@@ -56,8 +53,7 @@ export default function Info() {
   const [domainAddr, setDomainAddr] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const contractAddress = checkContract();
-  const isNetworkValid = useNetworkValidation();
+  const { isValid, contractAddress } = useNetworkValidation(); // Get the contract address and validation status
   const [to, setTo] = useState("");
   const [eth, setEth] = useState("");
   const [flag, setFlag] = useState(false);
@@ -78,7 +74,7 @@ export default function Info() {
   };
 
   const {
-    config_c,
+    config: config_c,
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareContractWrite({
@@ -199,7 +195,7 @@ export default function Info() {
           bgSize={"lg"}
           maxH={"80vh"}
         >
-          {isNetworkValid && isDomainMatched(domain) ? (
+          {isValid && isDomainMatched(domain) ? (
             <Stack
               as={Box}
               textAlign={"center"}

@@ -1,53 +1,57 @@
+// src/hooks/domainInfo.tsx
+
 import { useEffect, useState } from 'react';
 import { useContractReads } from 'wagmi';
 import abiFile from '../abiFile.json';
-import { useNetworkValidation, checkContract } from './useNetworkValidation';
+import { useNetworkValidation } from './useNetworkValidation';
 
-function useDomainInfo(domainName: string) {
+interface DomainInfo {
+  domainId: number | null;
+  oldUri: string | null;
+  ownerAddress: string | null;
+  erc20: number | null;
+  listing_price: number | null;
+  isLoading: boolean;
+  isError: boolean;
+}
+
+function useDomainInfo(domainName: string): DomainInfo {
   const [domainId, setDomainId] = useState<number | null>(null);
   const [ownerAddress, setOwnerAddress] = useState<string | null>(null);
   const [oldUri, setOldUri] = useState<string | null>(null);
   const [erc20, setErc20] = useState<number | null>(null);
   const [listing_price, setAllow] = useState<number | null>(null);
 
-  // Call checkContract inside the function body
-  const contractAddress = checkContract(); 
-  let CONTRACT_ADDRESS = ''; 
-
-  if (contractAddress) {
-    CONTRACT_ADDRESS = contractAddress;
-  } else {
-    console.log("No matching contract address found for the current chain.");
-  }
+  const { isValid, contractAddress } = useNetworkValidation(); // Get the contract address and validation status
 
   const { data, isError, isLoading } = useContractReads({
     contracts: [
       {
-        address: CONTRACT_ADDRESS as `0x${string}`,
+        address: contractAddress as `0x${string}`,
         abi: abiFile.abi,
         functionName: 'getID',
         args: [domainName],
       },
       {
-        address: CONTRACT_ADDRESS as `0x${string}`,
+        address: contractAddress as `0x${string}`,
         abi: abiFile.abi,
         functionName: 'getOwner',
-        args: [domainId],
+        args: [domainId]
       },
       {
-        address: CONTRACT_ADDRESS as `0x${string}`,
+        address: contractAddress as `0x${string}`,
         abi: abiFile.abi,
         functionName: 'tokenURI',
-        args: [domainId],
+        args: [domainId]
       },
       {
-        address: CONTRACT_ADDRESS as `0x${string}`,
+        address: contractAddress as `0x${string}`,
         abi: abiFile.abi,
         functionName: 'get_erc_TLD',
-        args: [domainId],
+        args: [domainId]
       },
       {
-        address: CONTRACT_ADDRESS as `0x${string}`,
+        address: contractAddress as `0x${string}`,
         abi: abiFile.abi,
         functionName: 'getAllow',
         args: [domainId],

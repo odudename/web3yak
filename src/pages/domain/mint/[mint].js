@@ -1,27 +1,15 @@
+// src/pages/domain/mint/[mint].js
+
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ethers } from "ethers";
-import {
-  DOMAIN,
-  DOMAIN_IMAGE_URL,
-  DOMAIN_NETWORK_CHAIN,
-  DOMAIN_DESCRIPTION,
-  NETWORK_ERROR,
-  TOKEN_CONTRACT_ADDRESS,
-  TOKEN_SYMBOL,
-  TOKEN_PRICE,
-  TOKEN_DECIMAL,
-  DOMAIN_PRICE_SYMBOL,
-} from "../../../configuration/Config";
+import { useLoadConfig } from "../../../hooks/useLoadConfig";
 import { generateJson } from "../../../hooks/ipfs";
 import { useDomainValidation } from "../../../hooks/validate";
 import useGlobal from "../../../hooks/global";
 import useDomainInfo from "../../../hooks/domainInfo";
-import {
-  useNetworkValidation,
-  checkContract,
-} from "../../../hooks/useNetworkValidation";
+import { useNetworkValidation } from "../../../hooks/useNetworkValidation";
 import Notice from "../../../components/domain/notice";
 import abiFile from "../../../abiFile.json";
 import ercabi from "../../../erc20abi.json";
@@ -58,9 +46,7 @@ import {
   useToast,
   Kbd,
   Tag,
-  fadeConfig,
 } from "@chakra-ui/react";
-
 import {
   Stat,
   StatLabel,
@@ -69,27 +55,20 @@ import {
   StatArrow,
   StatGroup,
 } from "@chakra-ui/react";
-
-import { ExternalLinkIcon, ChevronRightIcon } from "@chakra-ui/icons"; // Assuming this is how ExternalLinkIcon is imported in your project
+import { ExternalLinkIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
 } from "@chakra-ui/react";
-
 import { Grid, GridItem } from "@chakra-ui/react";
 
-
-
-
-
 export default function Info() {
+  const { config, configLoading } = useLoadConfig(); // Load configuration
+  const { isValid, contractAddress } = useNetworkValidation(); // Get the contract address and validation status
 
-
-  
   const { isValidDomain, validateDomain } = useDomainValidation();
-  const isNetworkValid = useNetworkValidation();
 
   const uniqueId = Math.round(Date.now() * Math.random()).toString();
   const { address, connector, isConnected } = useAccount();
@@ -98,76 +77,73 @@ export default function Info() {
   const router = useRouter();
   const { mint } = router.query;
   const domain = mint ? String(mint).toLowerCase() : "";
-  const { isValidDomainName, showToast } = useGlobal();
+  const { isValidDomainName, showToast, getErcBalance } = useGlobal();
   const [domainName, setDomainName] = useState("odude");
   const [claimId, setClaimId] = useState(uniqueId); // Using claimId state instead of claim_id variable
   const [claimTransferTo, setClaimTransferTo] = useState(
     "0x8D714B10B719c65B878F2Ed1436A964E11fA3271"
   );
-  //console.log(domain);
 
-
-
-  const [claimUrl, setClaimUrl] = useState(
-    "https://web3domain.org/endpoint/temp_json.php?domain=" +
-      domain +
-      "&image=" +
-      DOMAIN_IMAGE_URL
-  );
-  const [erc20, setErc20] = useState(false); //Only for ERC20 token
-  const [allow, setAllow] = useState(false); //Allow for minting
-  const [valid, setValid] = useState(false); //Check for domain validation
-  const [ercBalance, setErcBalance] = useState("0.00"); //ERC Balance
-  const [allowanceBalance, setAllowanceBalance] = useState("0.00"); //ERC Balance
+  const [claimUrl, setClaimUrl] = useState('');
+  const [erc20, setErc20] = useState(false); // Only for ERC20 token
+  const [allow, setAllow] = useState(false); // Allow for minting
+  const [valid, setValid] = useState(false); // Check for domain validation
+  const [ercBalance, setErcBalance] = useState("0.00"); // ERC Balance
+  const [allowanceBalance, setAllowanceBalance] = useState("0.00"); // ERC Balance
   const [isApprovalNeeded, setIsApprovalNeeded] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState(''); // Can be 'pending', 'approved', 'failed'
 
-  // Conditional Overrides
-  const overrides = erc20
-    ? {} // Empty object for ERC20 (no ETH required)
-    : { value: ethers.utils.parseEther(TOKEN_PRICE) }; // Using ETH
-    const CONTRACT_ADDRESS = checkContract();
+  const toast = useToast();
+
+  // State for overrides
+  const [overrides, setOverrides] = useState('');
+
+  // Update claimUrl and overrides when config, domain, or erc20 changes
+  useEffect(() => {
+    if (config) {
+      setClaimUrl(`https://web3domain.org/endpoint/temp_json.php?domain=${domain}&image=${config.DOMAIN_IMAGE_URL}`);
+      setOverrides(erc20 ? {} : { value: ethers.utils.parseEther(config.TOKEN_PRICE || "0") });
+    }
+  }, [config, domain, erc20]);
+
+  // Prepare contract write for 'claim' function
   const {
-    config_c,
+    config: claimConfig,
     error: prepareError,
     isError: isPrepareError,
   } = usePrepareContractWrite({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress || undefined,
     abi: abiFile.abi,
     functionName: "claim",
     args: [claimId, domainName, claimUrl, claimTransferTo],
-    overrides, // Apply conditional overrides
+    overrides,
+    enabled: isValid && !configLoading && !!contractAddress && !!claimId && !!domainName && !!claimUrl && !!claimTransferTo,
   });
 
-  const { data, error, isError, write } = useContractWrite(config_c);
+  const { data: claimData, error: claimError, isError: isClaimError, write: claimWrite } = useContractWrite(claimConfig);
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
+  const { isLoading: isClaimLoading, isSuccess: isClaimSuccess } = useWaitForTransaction({
+    hash: claimData?.hash,
   });
 
-
-  const { AllowanceError, data: allowance } = useContractRead({
-    address: TOKEN_CONTRACT_ADDRESS,
+  // Read allowance for ERC20 token
+  const { data: allowance, isError: AllowanceError } = useContractRead({
+    address: config?.TOKEN_CONTRACT_ADDRESS || undefined,
     abi: ercabi.abi,
     functionName: "allowance",
-    args: [address, CONTRACT_ADDRESS],
-});
+    args: [address || "0x0000000000000000000000000000000000000000", contractAddress || "0x0000000000000000000000000000000000000000"],
+    enabled: isValid && !configLoading && !!config?.TOKEN_CONTRACT_ADDRESS && !!address && !!contractAddress,
+  });
 
-const { getErcBalance } = useGlobal(); // Initialize hooks
-
-  //console.log("CONTRACT_ADDRESS:", CONTRACT_ADDRESS);
-  //console.log("Address:", address);
-  //console.log("TOKEN_CONTRACT_ADDRESS:", TOKEN_CONTRACT_ADDRESS);
-  
-  //console.log( allowance.toString());
-
-  // Prepare contract write for approval only if needed
-  const { config_c: approveConfig } = usePrepareContractWrite({
-    address: TOKEN_CONTRACT_ADDRESS,
+  // Prepare contract write for 'approve' function
+  const {
+    config_c: approveConfig,
+  } = usePrepareContractWrite({
+    address: config?.TOKEN_CONTRACT_ADDRESS || undefined,
     abi: ercabi.abi,
     functionName: "approve",
-    args: [CONTRACT_ADDRESS, ethers.utils.parseUnits(TOKEN_PRICE, TOKEN_DECIMAL)], // Approve the token price
-    enabled: isApprovalNeeded, // Only enable if approval is needed
+    args: [contractAddress || "0x0000000000000000000000000000000000000000", ethers.utils.parseUnits(config?.TOKEN_PRICE || "0", config?.TOKEN_DECIMAL || 18)],
+    enabled: isApprovalNeeded && isValid && !configLoading && !!config?.TOKEN_CONTRACT_ADDRESS,
   });
 
   const {
@@ -179,158 +155,151 @@ const { getErcBalance } = useGlobal(); // Initialize hooks
   } = useContractWrite(approveConfig);
 
   const handleApproval = () => {
-    if (isApprovalNeeded) {
+    if (isApprovalNeeded && approveWrite) {
       console.log('Approval required');
       approveWrite(); // Perform the token approval
       setApprovalStatus('pending'); // Mark as pending after initiating the approval
-
-    }
-    else
-    {
+    } else {
       console.log("Approval not required");
     }
   };
 
+  // Handle errors from 'claim' function
   useEffect(() => {
-    if (isError) {
-console.log(error);
+    if (isClaimError && claimError) {
+      console.error("Claim Error:", claimError.message);
+      showAlert("Minting failed: " + claimError.message);
+    } else if (!isClaimError) {
+      console.log('No error in claim');
     }
-    else
-    {
-      console.log('No error');
+  }, [isClaimError, claimError]);
+
+  // Handle mint success
+  useEffect(() => {
+    if (isClaimSuccess) {
+      showAlert("Successfully minted your domain!");
     }
-  }, [isError, data, error]); // Execute only when `allow` is true
+  }, [isClaimSuccess]);
 
-  const handleMint = async () => {
-    // console.log("hello " + domain);
-
-    setDomainName(domain);
-    setClaimId(uniqueId); // Update claimId state
-    setClaimTransferTo(address); // Update claimTransferTo state
-    setClaimUrl("https://web3domain.org/endpoint/temp_json.php?domain=" +domain +"&image=" +DOMAIN_IMAGE_URL);
-
-    if (!isPrepareError) {
-      console.log("To: "+address + " \n URL: "+claimUrl);
-      write();
-    } else {
-      // console.log(prepareError);
-      showAlert("Domain is prepared to get minted.");
-    }
-  };
-
-  const toast = useToast();
+  // Show alerts using toast
   function showAlert(err) {
     toast({
       title: "Notice",
       description: err,
       status: "warning",
       duration: 4000,
-      isClosable: false,
+      isClosable: true,
     });
   }
 
-
+  // Handle approval status updates
   useEffect(() => {
-    // If a transaction hash is available, update the status
     if (approvalData?.hash) {
       console.log(`Transaction hash: ${approvalData.hash}`);
       setApprovalStatus('approved'); // Approval successful
     }
 
-    // If there's an error, mark as failed
-    if (isApprovalError) {
-      console.error('Approval error:', approvalError?.message);
+    if (isApprovalError && approvalError) {
+      console.error('Approval error:', approvalError.message);
       setApprovalStatus('failed'); // Approval failed
+      showAlert("Approval failed: " + approvalError.message);
     }
 
-    // If it's still loading, keep the status pending
     if (isApprovalLoading) {
       setApprovalStatus('pending'); // Transaction still pending
     }
-  }, [approvalData, isApprovalLoading, isApprovalError, approvalError]);
 
+  }, [approvalData, isApprovalError, approvalError, isApprovalLoading]);
+
+  // Update allowance balance when allowance data changes
   useEffect(() => {
-  
-   if (AllowanceError) {
+    if (AllowanceError) {
       console.error("Error fetching allowance:", AllowanceError);
     } else if (allowance === undefined) {
       console.log("Allowance returned undefined.");
     } else {
       console.log("Allowance:", allowance.toString());
-      const humanReadableAllowance = ethers.utils.formatUnits(allowance, TOKEN_DECIMAL);
+      const humanReadableAllowance = ethers.utils.formatUnits(allowance, config?.TOKEN_DECIMAL || 18);
       setAllowanceBalance(humanReadableAllowance);
     }
-  }, [AllowanceError, allowance,approvalStatus,isSuccess]);
-  
-    // Check if approval is needed and set state accordingly
-    useEffect(() => {
-      if (allowance < TOKEN_PRICE) {
+  }, [AllowanceError, allowance, approvalStatus, isClaimSuccess, config]);
+
+  // Determine if approval is needed based on allowance
+  useEffect(() => {
+    if (allowance !== undefined && config?.TOKEN_PRICE !== undefined && config?.TOKEN_DECIMAL !== undefined) {
+      const requiredAmount = ethers.utils.parseUnits(config.TOKEN_PRICE, config.TOKEN_DECIMAL);
+      const userAllowance = ethers.BigNumber.from(allowance);
+      if (userAllowance.lt(requiredAmount)) {
         setIsApprovalNeeded(true);
       } else {
         setIsApprovalNeeded(false);
       }
-    }, [allowance, approvalStatus, isSuccess]);
-
-  // Validate domain and set "allow" state
-  useEffect(() => {
-    if (isValidDomainName(domain)) {
-      setValid(true);
     }
+  }, [allowance, approvalStatus, isClaimSuccess, config]);
 
-    if (TOKEN_CONTRACT_ADDRESS != "") {
-      setErc20(true);
-    }
-  }, [domain, isValidDomainName]); // Include dependencies to ensure the effect runs only when these change
-
-  // Conditionally use the hooks and execute the logic
+  // Validate domain and set ERC20 usage
   useEffect(() => {
-    if (valid && erc20) {
-      
-      // You can also get ERC balance if needed
+    if(domain && config) {
+      if (isValidDomainName(domain)) {
+        setValid(true);
+      }
+
+      if (config.TOKEN_CONTRACT_ADDRESS) {
+        setErc20(true);
+      }
+    }
+  }, [domain, config, isValidDomainName]);
+
+  // Fetch ERC20 balance if needed
+  useEffect(() => {
+    if (valid && erc20 && config?.TOKEN_CONTRACT_ADDRESS && address) {
       const fetchBalance = async () => {
-        const balance = await getErcBalance(TOKEN_CONTRACT_ADDRESS, address);
-        console.log("ERC20 Balance:", balance);
-        const roundedBalance = parseFloat(balance).toFixed(3);
-        setErcBalance(roundedBalance);
+        try {
+          const balance = await getErcBalance(config.TOKEN_CONTRACT_ADDRESS, address);
+          console.log("ERC20 Balance:", balance);
+          const roundedBalance = parseFloat(balance).toFixed(3);
+          setErcBalance(roundedBalance);
+        } catch (error) {
+          console.error("Error fetching ERC20 balance:", error);
+        }
       };
       fetchBalance();
     }
-  }, [valid, address, approvalStatus, isSuccess, erc20]); // Execute only when `allow` is true
+  }, [valid, address, approvalStatus, isClaimSuccess, erc20, config, getErcBalance]);
 
+  // Fetch ETH balance
   useEffect(() => {
     const fetchEthBalance = async () => {
-      if (address) {
-        // Create a provider using the default Ethereum provider
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-        // Fetch the balance for the connected wallet
-        const rawBalance = await provider.getBalance(address);
-        const formattedBalance = ethers.utils.formatEther(rawBalance);
-
-        // Convert to 2 decimal places
-        const roundedBalance = parseFloat(formattedBalance).toFixed(3);
-
-        setEthBalance(roundedBalance); // Store the formatted balance with 2 decimal places
+      if (address && typeof window !== "undefined" && (window).ethereum) { // Ensure window.ethereum is available
+        try {
+          const provider = new ethers.providers.Web3Provider((window).ethereum);
+          const rawBalance = await provider.getBalance(address);
+          const formattedBalance = ethers.utils.formatEther(rawBalance);
+          const roundedBalance = parseFloat(formattedBalance).toFixed(3);
+          setEthBalance(roundedBalance);
+        } catch (error) {
+          console.error("Error fetching ETH balance:", error);
+        }
       }
     };
 
     fetchEthBalance(); // Fetch balance when the component mounts or when the address changes
-  }, [address,isSuccess]); // Ensure useEffect reruns if the address changes
+  }, [address, isClaimSuccess]);
 
+  // Check if sufficient balance is available
   useEffect(() => {
     if (erc20) {
-      console.log("check balance for erc20");
-         //Check if sufficient ETH balance
-         if (ercBalance < TOKEN_PRICE) {
-          console.log("Insufficient TOKEN balance: " + ercBalance);
-          setAllow(false);
-        } else {
-          setAllow(true);
-          console.log("TOKEN balance OK: " + ercBalance);
-        }
+      console.log("Check balance for ERC20");
+      if (parseFloat(ercBalance) < parseFloat(config?.TOKEN_PRICE || "0")) {
+        console.log("Insufficient TOKEN balance: " + ercBalance);
+        setAllow(false);
+      } else {
+        setAllow(true);
+        console.log("TOKEN balance OK: " + ercBalance);
+      }
     } else {
-      //Check if sufficient ETH balance
-      if (ethBalance < TOKEN_PRICE) {
+      console.log("Check balance for ETH");
+      if (parseFloat(ethBalance) < parseFloat(config?.TOKEN_PRICE || "0")) {
         console.log("Insufficient ETH balance: " + ethBalance);
         setAllow(false);
       } else {
@@ -338,7 +307,22 @@ console.log(error);
         console.log("ETH balance OK: " + ethBalance);
       }
     }
-  }, [address, ethBalance, erc20, ercBalance, approvalStatus,isSuccess, isApprovalNeeded]); // Execute only when `allow` is true
+  }, [address, ethBalance, erc20, ercBalance, approvalStatus, isClaimSuccess, isApprovalNeeded, config]);
+
+  // Handle minting
+  const handleMint = async () => {
+    setDomainName(domain);
+    setClaimId(uniqueId); // Update claimId state
+    setClaimTransferTo(address || "0x0000000000000000000000000000000000000000"); // Update claimTransferTo state
+    setClaimUrl(`https://web3domain.org/endpoint/temp_json.php?domain=${domain}&image=${config?.DOMAIN_IMAGE_URL || ""}`);
+
+    if (!isPrepareError && claimWrite) {
+      console.log(`To: ${address} \n URL: ${claimUrl}`);
+      claimWrite();
+    } else {
+      showAlert("Preparation for minting failed.");
+    }
+  };
 
   return (
     <>
@@ -358,7 +342,7 @@ console.log(error);
           bgSize={"lg"}
           maxH={"80vh"}
         >
-          {isNetworkValid ? (
+          {isValid ? (
             <Container
               maxW={"3xl"}
               alignItems={"center"}
@@ -394,7 +378,7 @@ console.log(error);
                 <Image
                   objectFit="cover"
                   maxW={{ base: "100%", sm: "200px" }}
-                  src={DOMAIN_IMAGE_URL}
+                  src={config?.DOMAIN_IMAGE_URL}
                   alt={domain}
                 />
 
@@ -404,53 +388,50 @@ console.log(error);
                       <div>Mint Domain</div>
                     </Heading>
 
-               
-
                     {valid && allow ? (
                       <>
                         {domainName !== "odude" &&
-                          (!isSuccess && !isApprovalNeeded ? (
+                          (!isClaimSuccess && !isApprovalNeeded ? (
                             <Button
                               variant="solid"
                               colorScheme="blue"
-                              onClick={() => handleMint()}
+                              onClick={handleMint}
+                              isLoading={isClaimLoading}
                             >
-                              {isLoading ? "Minting..." : "Mint"}
+                              Mint
                             </Button>
                           ) : null)}
                         {domainName === "odude" && !isApprovalNeeded && (
                           <Button
                             variant="solid"
                             colorScheme="yellow"
-                            onClick={() => handleMint()}
+                            onClick={handleMint}
                           >
                             Configure Domain
                           </Button>
                         )}
 
+                        {isClaimSuccess && (
+                          <div>
+                            <Alert
+                              status="success"
+                              variant="subtle"
+                              flexDirection="column"
+                              alignItems="center"
+                              justifyContent="center"
+                              textAlign="center"
+                              height="100px"
+                            >
+                              <AlertIcon boxSize="40px" mr={0} />
+                              <AlertTitle mt={4} mb={1} fontSize="lg">
+                                Successfully minted your NFT!
+                              </AlertTitle>
+                            </Alert>
+                            <Divider />
+                          </div>
+                        )}
 
-{isSuccess && (
-                <div>
-                  <Alert
-                    status="success"
-                    variant="subtle"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    textAlign="center"
-                    height="100px"
-                  >
-                    <AlertIcon boxSize="40px" mr={0} />
-                    <AlertTitle mt={4} mb={1} fontSize="lg">
-                    Successfully minted your NFT!
-                    </AlertTitle>
-                
-                  </Alert>
-                  <Divider/>
-                </div>
-              )}
-
-                        {isSuccess && (
+                        {isClaimSuccess && (
                           <div>
                             &nbsp;
                             <Button variant="solid" colorScheme="yellow">
@@ -462,40 +443,46 @@ console.log(error);
                         )}
                       </>
                     ) : (
-                      <Tag size="sm" variant="solid" colorScheme="teal">Check balance/network </Tag>
+                      <Tag size="sm" variant="solid" colorScheme="teal">
+                        Check balance/network
+                      </Tag>
                     )}
 
-                    { isApprovalNeeded && allow && (
+                    {isApprovalNeeded && allow && (
                       <>
-                     <Button  variant="solid" colorScheme="green" onClick={handleApproval}>Approve {TOKEN_SYMBOL}</Button>
-                     <div>
-                     <Divider />
-                     <Tag size="sm" variant="solid" colorScheme="teal">  {approvalStatus} </Tag>
-      </div></>
-                    )
-}
+                        <Button variant="solid" colorScheme="green" onClick={handleApproval} isLoading={isApprovalLoading}>
+                          Approve {config?.TOKEN_SYMBOL || "Token"}
+                        </Button>
+                        <div>
+                          <Divider />
+                          <Tag size="sm" variant="solid" colorScheme="teal">
+                            {approvalStatus}
+                          </Tag>
+                        </div>
+                      </>
+                    )}
                   </CardBody>
 
                   <CardFooter>
                     {erc20 ? (
                       <Grid templateColumns="repeat(3, 1fr)" gap={10}>
-                        <GridItem w="100%" h="20" border='1px' borderColor='blue.200'>
+                        <GridItem w="100%" h="20" border="1px" borderColor="blue.200">
                           <Stat>
-                            <StatLabel>{TOKEN_SYMBOL}</StatLabel>
-                            <StatNumber >{ercBalance}</StatNumber>
+                            <StatLabel>{config?.TOKEN_SYMBOL}</StatLabel>
+                            <StatNumber>{ercBalance}</StatNumber>
                             <StatHelpText>Balance</StatHelpText>
                           </Stat>
                         </GridItem>
-                        <GridItem w="100%" h="20" border='1px' borderColor="red.100">
-                          <Stat  colorScheme='teal'>
-                            <StatLabel>{TOKEN_SYMBOL}</StatLabel>
-                            <StatNumber>{TOKEN_PRICE}</StatNumber>
+                        <GridItem w="100%" h="20" border="1px" borderColor="red.100">
+                          <Stat colorScheme="teal">
+                            <StatLabel>{config?.TOKEN_SYMBOL}</StatLabel>
+                            <StatNumber>{config?.TOKEN_PRICE}</StatNumber>
                             <StatHelpText>Required Fee</StatHelpText>
                           </Stat>
                         </GridItem>
-                        <GridItem w="100%" h="20" border='1px' borderColor="green.100">
+                        <GridItem w="100%" h="20" border="1px" borderColor="green.100">
                           <Stat>
-                            <StatLabel>{TOKEN_SYMBOL}</StatLabel>
+                            <StatLabel>{config?.TOKEN_SYMBOL}</StatLabel>
                             <StatNumber>{allowanceBalance}</StatNumber>
                             <StatHelpText>Approved Fee</StatHelpText>
                           </Stat>
@@ -504,22 +491,21 @@ console.log(error);
                     ) : (
                       <>
                         <Grid templateColumns="repeat(2, 1fr)" gap={10}>
-                          <GridItem w="100%" h="20" border='1px' borderColor="blue.100">
+                          <GridItem w="100%" h="20" border="1px" borderColor="blue.100">
                             <Stat>
-                              <StatLabel>{TOKEN_SYMBOL}</StatLabel>
+                              <StatLabel>ETH</StatLabel>
                               <StatNumber>{ethBalance}</StatNumber>
                               <StatHelpText>Balance</StatHelpText>
                             </Stat>
                           </GridItem>
-                          <GridItem w="100%" h="20" border='1px' borderColor="red.100">
+                          <GridItem w="100%" h="20" border="1px" borderColor="red.100">
                             <Stat>
-                              <StatLabel>{TOKEN_SYMBOL}</StatLabel>
-                              <StatNumber>{TOKEN_PRICE}</StatNumber>
+                              <StatLabel>ETH</StatLabel>
+                              <StatNumber>{config?.TOKEN_PRICE}</StatNumber>
                               <StatHelpText>Required Fee</StatHelpText>
                             </Stat>
                           </GridItem>
                         </Grid>
-                    
                       </>
                     )}
                   </CardFooter>
