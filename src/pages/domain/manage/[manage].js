@@ -106,6 +106,8 @@ export default function Manage() {
   const [web3Url, setWeb3Url] = useState("");
   const [web2Url, setWeb2Url] = useState("");
   const [flag, setFlag] = useState(false);
+  const bg=useColorModeValue("white", "gray.700");
+  const color=useColorModeValue("gray.700", "whiteAlpha.900");
 
   const { validateURL } = useURLValidation();
   const handleURLChange = (event) => {
@@ -392,9 +394,9 @@ export default function Manage() {
     <Flex
       align="center"
       justify="center"
-      bg={useColorModeValue("white", "gray.700")}
+      bg={bg}
       borderRadius="md"
-      color={useColorModeValue("gray.700", "whiteAlpha.900")}
+      color={color}
       shadow="base"
       minWidth="max-content"
     >

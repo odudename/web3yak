@@ -14,7 +14,10 @@ import {
 } from "@chakra-ui/react";
 export default function SearchPage() {
   const { config, configLoading } = useLoadConfig(); // Load configuration
-    // Conditional rendering based on config loading state
+  const bg=useColorModeValue("white", "gray.700");
+  const color=useColorModeValue("gray.700", "whiteAlpha.900"); 
+  
+  // Conditional rendering based on config loading state
     if (configLoading) {
       return (
         <Flex align="center" justify="center" h="100vh">
@@ -31,9 +34,9 @@ export default function SearchPage() {
       <Flex
         align="center"
         justify="center"
-        bg={useColorModeValue("white", "gray.700")}
+        bg={bg}
         borderRadius="md"
-        color={useColorModeValue("gray.700", "whiteAlpha.900")}
+        color={color}
         shadow="base"
       >
         <Box

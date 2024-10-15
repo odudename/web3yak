@@ -93,6 +93,8 @@ export default function Info() {
   const [img3, setImg3] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [htmlPreview, setHtmlPreview] = useState("No preview available");
+  const textColor = useColorModeValue("gray.800", "white");
+  const bg=useColorModeValue("white", "gray.700");
 
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
@@ -340,9 +342,9 @@ export default function Info() {
     <Flex
       align="center"
       justify="center"
-      bg={useColorModeValue("white", "gray.700")}
+      bg={bg}
       borderRadius="md"
-      color={useColorModeValue("gray.700", "whiteAlpha.900")}
+      color={textColor}
       shadow="base"
     >
       <Box

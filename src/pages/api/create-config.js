@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       const filePath = path.join(process.cwd(), "src", "configuration", `${config}.tsx`);
       await fs.promises.writeFile(filePath, fileContent);
 
-      res.status(200).json({ message: "File created successfully" });
+      res.status(200).json({ message: "Configuration Loaded" });
     } catch (error) {
       console.error("Error creating file:", error);
       res.status(500).json({ message: "Error creating file" });

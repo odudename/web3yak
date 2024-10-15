@@ -57,7 +57,8 @@ export default function Info() {
   const [error, setError] = useState("");
   const [isFetching, setIsFetching] = useState(true); // Separate fetching state
   const [isTransactionLoading, setIsTransactionLoading] = useState(false); // Separate transaction loading
-
+  const bg=useColorModeValue("white", "gray.700");
+  const color=useColorModeValue("gray.700", "whiteAlpha.900");
   var CONTRACT_ADDRESS = ""; // No contract found
   if (contractAddress) {
     CONTRACT_ADDRESS = contractAddress;
@@ -212,9 +213,9 @@ export default function Info() {
     <Flex
       align="center"
       justify="center"
-      bg={useColorModeValue("white", "gray.700")}
+      bg={bg}
       borderRadius="md"
-      color={useColorModeValue("gray.700", "whiteAlpha.900")}
+      color={color}
       shadow="base"
     >
       <Container

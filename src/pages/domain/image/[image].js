@@ -71,7 +71,8 @@ export default function Info() {
   const [isMainLoading, setIsMainLoading] = useState(true);
   const [newUrl, setNewUrl] = useState('');
   const [nftImage, setNftImage] = useState(''); // Initialize with an empty string
-
+  const bg=useColorModeValue("white", "gray.700");
+  const color=useColorModeValue("gray.700", "whiteAlpha.900");
   const [jsonDataNew, setJsonDataNew] = useState(null); // Initialize jsonDataNew as null
   const [show, setShow] = useState(false);
   let firstImg = '';
@@ -226,9 +227,9 @@ console.log('Parsed Image URL:', parsedContent.url);
     <Flex
       align="center"
       justify="center"
-      bg={useColorModeValue("white", "gray.700")}
+      bg={bg}
       borderRadius="md"
-      color={useColorModeValue("gray.700", "whiteAlpha.900")}
+      color={color}
       shadow="base"
     >
       <Box

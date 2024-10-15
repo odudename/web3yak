@@ -66,7 +66,8 @@ export default function Info() {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const bg=useColorModeValue("white", "gray.700");
+  const color=useColorModeValue("gray.700", "whiteAlpha.900");
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
@@ -172,9 +173,9 @@ export default function Info() {
     <Flex
       align="center"
       justify="center"
-      bg={useColorModeValue("white", "gray.700")}
+      bg={bg}
       borderRadius="md"
-      color={useColorModeValue("gray.700", "whiteAlpha.900")}
+      color={color}
       shadow="base"
     >
       <Container

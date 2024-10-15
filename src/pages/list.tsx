@@ -85,7 +85,7 @@ export default function DomainList() {
   if (configLoading) {
     return (
       <Flex align="center" justify="center" h="100vh">
-        <Spinner size="xl" />
+        <Spinner size="xs" />
       </Flex>
     );
   }

@@ -49,6 +49,7 @@ export const TOKEN_PRICE = "1" //Token price to mint
 export const TOKEN_DECIMAL = "18" //Decimal places of TOKEN_CONTRACT_ADDRESS or TOKEN_SYMBOL
 export const TOKEN_CONTRACT_ADDRESS=""
 
+export const OTHER_DOMAIN="true" //This will load other domain configuration at your application. 
 
 
 // Menu
