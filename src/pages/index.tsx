@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import React from "react";
 import { useLoadConfig } from '../hooks/useLoadConfig';
 import Search from "../components/domain/Search";
-import { Image,Center } from '@chakra-ui/react'
+import { Image,Center,Spinner } from '@chakra-ui/react'
 import PrivateNotice from "../components/message/PrivateNotice";
 // Import debounce from lodash
 import {
@@ -25,7 +25,7 @@ const Home: NextPage = () => {
 
     // Check if the config is loading
     if (configLoading) {
-      return <div>Loading...</div>; // Optionally, you can add a spinner or custom loading indicator
+      return (<Spinner size="xs" />);
     }
   
     // Handle case where config is null or not fully loaded

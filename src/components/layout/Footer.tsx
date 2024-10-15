@@ -8,6 +8,7 @@ import {
   useBreakpointValue,
   useColorModeValue,
   Image,
+  Spinner
 } from "@chakra-ui/react";
 import {
   FaDiscord,
@@ -33,7 +34,7 @@ export function Footer(props: Props) {
   const color=useColorModeValue("gray.700", "gray.200")
     // If loading, show a loading state for the header
     if (configLoading) {
-      return <div>Loading...</div>;
+      return (<Spinner size="xs" />);
     }
   
     // If config is missing or failed to load
@@ -82,7 +83,7 @@ export function Footer(props: Props) {
           height={8}
           alt={"Login Image"}
           objectFit={"cover"}
-          src={"/logo.png"}
+          src={config.LOGO}
         />
         </Link>
         <Stack direction={"row"} spacing={6}>

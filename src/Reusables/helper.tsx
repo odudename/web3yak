@@ -9,7 +9,8 @@ import {
   Show,
   IconButton,
   Link,
-  useBreakpointValue
+  useBreakpointValue,
+  Spinner
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLoadConfig } from "../hooks/useLoadConfig";
@@ -24,9 +25,8 @@ export const Logo = ({ onToggle, isOpen }: any) => {
 
   // If loading, show a loading state for the header
   if (configLoading) {
-    return <div>Loading...</div>;
+    return (<Spinner size="xs" />);
   }
-
   // If config is missing or failed to load
   if (!config) {
     return <div>Error loading configuration.</div>;
@@ -36,7 +36,7 @@ export const Logo = ({ onToggle, isOpen }: any) => {
     <HStack>
       <>
         <Link
-          href={"/#1.4"}
+          href={"/#1.5"}
           textAlign={textAlign as any}
           fontFamily={"heading"}
           color={textColor}
@@ -51,7 +51,7 @@ export const Logo = ({ onToggle, isOpen }: any) => {
             height={8}
             alt={"Login Image"}
             objectFit={"cover"}
-            src={"/logo.png"}
+            src={config.LOGO}
           />
         </Link>
         <Show above="sm">

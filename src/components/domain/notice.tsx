@@ -4,6 +4,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Spinner
 } from "@chakra-ui/react";
 import { useLoadConfig } from '../../hooks/useLoadConfig';
 
@@ -11,9 +12,9 @@ const Notice = () => {
   const { config, configLoading } = useLoadConfig();
 
   // Check if the config is loading
-if (configLoading) {
-  return <div>Loading...</div>;
-}
+  if (configLoading) {
+    return (<Spinner size="xs" />);
+  }
 
 // Handle case where config is null or not fully loaded
 if (!config) {

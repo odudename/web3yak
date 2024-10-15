@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Spinner
 } from "@chakra-ui/react";
 
 import {
@@ -149,7 +150,7 @@ export default function PrivateNotice() {
 
       // If loading, show a loading state for the header
       if (configLoading) {
-        return <div>Loading...</div>;
+        return (<Spinner size="xs" />);
       }
     
       // If config is missing or failed to load

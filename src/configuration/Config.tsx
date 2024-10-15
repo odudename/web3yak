@@ -50,6 +50,8 @@ export const TOKEN_DECIMAL = "18" //Decimal places of TOKEN_CONTRACT_ADDRESS or 
 export const TOKEN_CONTRACT_ADDRESS=""
 
 export const OTHER_DOMAIN="true" //This will load other domain configuration at your application. 
+export const FAVICON="http://localhost/blockchain/web3domain_org/endpoint/tln/fvm/favicon.ico";
+export const LOGO="/logo.png";
 
 
 // Menu

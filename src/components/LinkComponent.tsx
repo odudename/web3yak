@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import NextLink from 'next/link'
-import { Link, useColorModeValue } from '@chakra-ui/react'
+import { Link, useColorModeValue, Spinner } from '@chakra-ui/react'
 import { useLoadConfig } from '../hooks/useLoadConfig';
 
 interface Props {
@@ -27,7 +27,7 @@ export function LinkComponent(props: Props) {
 
     // Check if the config is loading
     if (configLoading) {
-      return <div>Loading...</div>;
+      return (<Spinner size="xs" />);
     }
   
     // Handle case where config is null or not fully loaded

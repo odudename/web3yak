@@ -1,13 +1,16 @@
 import React from 'react'
 import { useLoadConfig } from '../hooks/useLoadConfig';
 import { DefaultSeo } from 'next-seo'
+import {  Spinner } from "@chakra-ui/react";
+
+
 
 export default function Seo() {
   const { config, configLoading } = useLoadConfig();
   // Check if the config is loading
-if (configLoading) {
-  return <div>Loading...</div>;
-}
+  if (configLoading) {
+    return (<Spinner size="xs" />);
+  }
 
 // Handle case where config is null or not fully loaded
 if (!config) {

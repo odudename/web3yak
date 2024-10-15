@@ -13,6 +13,7 @@ import {
   Stack,
   useDisclosure,
   Icon,
+  Spinner
 } from "@chakra-ui/react";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -46,7 +47,7 @@ export function Header(props: Props) {
 
   // If loading, show a loading state for the header
   if (configLoading) {
-    return <div>Loading...</div>;
+    return (<Spinner size="xs" />);
   }
 
   // If config is missing or failed to load

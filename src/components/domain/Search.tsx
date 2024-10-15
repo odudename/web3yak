@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Input, Box, TableContainer, Table, Tbody, Tr, Td, Divider } from '@chakra-ui/react';
+import { Input, Box, TableContainer, Table, Tbody, Tr, Td, Divider,Spinner } from '@chakra-ui/react';
 import { CheckDomain } from '../CheckDomain';
 import { useLoadConfig } from '../../hooks/useLoadConfig';
 
@@ -77,7 +77,7 @@ const Search = () => {
   };
     // Check if the config is loading
     if (configLoading) {
-      return <div>Loading...</div>; // Optionally, you can add a spinner or custom loading indicator
+      return (<Spinner size="xs" />);
     }
   
     // Handle case where config is null or not fully loaded

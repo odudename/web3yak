@@ -49,8 +49,8 @@ export const TOKEN_PRICE = "1" //Token price to mint
 export const TOKEN_DECIMAL = "18" //Decimal places of TOKEN_CONTRACT_ADDRESS or TOKEN_SYMBOL
 export const TOKEN_CONTRACT_ADDRESS=""
 
-export const favicon="";
-export const logo="";
+export const FAVICON="http://localhost/blockchain/web3domain_org/endpoint/tln/fvm/favicon.ico";
+export const LOGO="http://localhost/blockchain/web3domain_org/endpoint/tln/fvm/logo.png";
 
 // Menu
 // src/configuration/Config.tsx

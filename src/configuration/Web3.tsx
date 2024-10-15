@@ -7,7 +7,7 @@ import { ReactNode } from 'react'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { useLoadConfig } from "../hooks/useLoadConfig";
 import React from 'react'
-
+import { Image,Center,Spinner } from '@chakra-ui/react'
 let INFURA_KEY = process.env.NEXT_PUBLIC_INFURA_KEY || "";
 let ALCHEMY_KEY = process.env.NEXT_PUBLIC_ALCHEMY_KEY || "";
 
@@ -20,7 +20,7 @@ export function Web3Provider(props: Props) {
   const { config, configLoading } = useLoadConfig();
       // If loading, show a loading state for the header
       if (configLoading) {
-        return <div>Loading...</div>;
+        return (<Spinner size="xs" />);
       }
     
       // If config is missing or failed to load
