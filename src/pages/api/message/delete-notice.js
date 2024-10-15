@@ -1,45 +1,38 @@
-// pages/api/message/delete-notice.js
-import fs from 'fs';
-import path from 'path';
+// src/pages/api/message/delete-notice.js
+import { connectToDatabase } from '../../../hooks/useDatabase';
 
 export default async function handler(req, res) {
+  // Only allow DELETE requests
+  if (req.method !== 'DELETE') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
 
-    // Check if the API token is provided in the request header
+  // Check if the API token is provided in the request header
   const apiToken = req.headers['api-token'];
 
   if (!apiToken || apiToken !== process.env.NEXT_PUBLIC_PASSWORD) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
-    
-  if (req.method === 'DELETE') {
-    try {
-        const { id } = req.query;
-      const entryID = id;
-      console.log('Requested to delete entry with ID:', entryID);
 
-      const filePath = path.join(process.cwd(), '/src/components/message/', 'PrivateNotice.json');
-      const existingData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-      console.log('Existing data:', existingData);
+  const { id } = req.query;
 
-      const indexToRemove = existingData.findIndex((entry) => entry.ID === Number(entryID));
-      console.log('Index to remove:', indexToRemove);
+  if (!id) {
+    return res.status(400).json({ error: 'ID is required' });
+  }
 
-      if (indexToRemove !== -1) {
-        existingData.splice(indexToRemove, 1);
+  try {
+    const db = await connectToDatabase();
+    const noticesCollection = db.collection('notices');
 
-        fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2), 'utf-8');
-        console.log('Data updated successfully');
+    const result = await noticesCollection.deleteOne({ ID: parseInt(id, 10) });
 
-        res.status(200).json({ message: 'Entry deleted successfully' });
-      } else {
-        console.error('Entry not found');
-        res.status(404).json({ error: 'Entry not found' });
-      }
-    } catch (error) {
-      console.error('Error deleting entry:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: `Entry with ID ${id} deleted successfully` });
+    } else {
+      res.status(404).json({ error: `No entry found with ID ${id}` });
     }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+  } catch (error) {
+    console.error('Error deleting entry:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 }

@@ -1,3 +1,4 @@
+// src/components/message/PrivateNotice.js
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { isValidMember } from "../../hooks/validate";
@@ -11,18 +12,12 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Spinner
-} from "@chakra-ui/react";
-
-import {
+  Spinner,
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-} from '@chakra-ui/react'
-
-import {
   Text,
   Box,
   Link,
@@ -31,13 +26,10 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-
-import { DeleteIcon, ChatIcon , AddIcon} from '@chakra-ui/icons'
-
-import jData from "./PrivateNotice.json";
+import { DeleteIcon, ChatIcon, AddIcon } from '@chakra-ui/icons';
 
 export default function PrivateNotice() {
-  const { address,  isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
   const [status, setStatus] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [noticeData, setNoticeData] = useState([]);
@@ -50,15 +42,25 @@ export default function PrivateNotice() {
     localforage.setItem(key, status);
   };
 
+  const fetchNotices = async () => {
+    try {
+      const response = await fetch('/api/message/get-notices');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setNoticeData(data);
+    } catch (error) {
+      console.error('Error fetching notices:', error);
+    }
+  };
+
   const edit = () => {
-   // console.log("Modify");
     setModify(true);
   };
 
   const update = async () => {
-    console.log("Update");
     try {
-      // Send an HTTP POST request to the API route
       const response = await fetch('/api/message/update-notice', {
         method: 'POST',
         headers: {
@@ -73,34 +75,34 @@ export default function PrivateNotice() {
 
       if (response.ok) {
         console.log('Data updated successfully');
-        setModify(false); // Set modify to false when the update is successful
+        setModify(false);
+        setTitle("");
+        setNotes("");
+        fetchNotices(); // Refresh the notice data after update
       } else {
-        console.error('Failed to update data');
+        const errorData = await response.json();
+        console.error('Failed to update data:', errorData.error);
       }
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
 
-
   const deleteEntry = async (entryID) => {
     try {
-      // Send an HTTP DELETE request to the API route
-      const response = await fetch(`/api/message/delete-notice/?id=${entryID}`, {
+      const response = await fetch(`/api/message/delete-notice?id=${entryID}`, {
         method: 'DELETE',
         headers: {
           'api-token': process.env.NEXT_PUBLIC_PASSWORD,
         },
       });
 
-      //console.log(response);
-
       if (response.ok) {
         console.log(`Entry with ID ${entryID} deleted successfully`);
-        // Refresh the data by calling the useEffect
-        setNoticeData([...noticeData.filter((entry) => entry.ID !== entryID)]);
+        setNoticeData(noticeData.filter((entry) => entry.ID !== entryID));
       } else {
-        console.error(`Failed to delete entry with ID ${entryID}`);
+        const errorData = await response.json();
+        console.error(`Failed to delete entry with ID ${entryID}:`, errorData.error);
       }
     } catch (error) {
       console.error(`Error deleting entry with ID ${entryID}:`, error);
@@ -108,55 +110,46 @@ export default function PrivateNotice() {
   };
 
   const closeModal = () => {
-   // console.log("Close the modal");
-    setModify(false); // Set modify to false when the modal is closed
-    onClose(); // Close the modal
+    setModify(false);
+    onClose();
   };
 
   useEffect(() => {
-    if (address) {
-      async function getStatus() {
-        let test = await isValidMember(address);
-        //console.log(test);
-        //console.log(address);
-        //console.log(ADMIN_WALLET);
-          // Ensure config is loaded
-  if (configLoading) {
-    console.log("Configuration is loading...");
-    return null;
-  }
-        if (address == config.ADMIN_WALLET) {
-          let addr = address?.toString();
-          setMembershipStatus(addr, "ADMIN");
+    if (address && !configLoading && config) {
+      const timeoutId = setTimeout(() => {
+        async function getStatus() {
+          try {
+            let test = await isValidMember(address);
+            if (address === config.ADMIN_WALLET) {
+              setMembershipStatus(address.toString(), "ADMIN");
+              setStatus("ADMIN");
+            } else {
+              setMembershipStatus(address.toString(), test);
+              setStatus(test);
+            }
+          } catch (error) {
+            console.error("Error fetching membership status:", error);
+          }
         }
 
-        setStatus(test);
-      }
-      getStatus();
+        getStatus();
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [address, status]);
+  }, [address, config, configLoading]);
 
   useEffect(() => {
-    // Fetch and set the JSON data (you can use an API request or import it as in this example)
-  //  console.log(jData); // Add this line for debugging
-    setNoticeData(jData);
-  }, [noticeData]);
+    fetchNotices(); // Fetch notice data from MongoDB
+  }, []);
 
-  useEffect(() => {
-    // Fetch and set the JSON data (you can use an API request or import it as in this example)
-   // console.log(modify); // Add this line for debugging
-    // setNoticeData(jData);
-  }, [modify]);
+  if (configLoading) {
+    return <Spinner size="xs" />;
+  }
 
-      // If loading, show a loading state for the header
-      if (configLoading) {
-        return (<Spinner size="xs" />);
-      }
-    
-      // If config is missing or failed to load
-      if (!config) {
-        return <div>Error loading configuration.</div>;
-      }
+  if (!config) {
+    return <div>Error loading configuration.</div>;
+  }
 
   return (
     <div>
@@ -167,46 +160,42 @@ export default function PrivateNotice() {
         <ModalContent>
           <ModalHeader>
             {config.NOTICE_TITLE} &nbsp;
-            {(!modify && status == "ADMIN") && isConnected ? <Button onClick={() => edit()}><AddIcon/></Button> : null}
+            {(!modify && status === "ADMIN") && isConnected ? (
+              <Button onClick={edit}><AddIcon/></Button>
+            ) : null}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {(status == "GOLD" || status == "ADMIN") && isConnected ? (
+            {(status === "GOLD" || status === "ADMIN") && isConnected ? (
               <>
                 {!modify ? (
-                  <>
-                    <Accordion>
-
-
-
-                      {noticeData.map((notice) => (
-
-
-                        <AccordionItem key={notice.ID}>
-                          <h2>
-                            <AccordionButton>
-                              <Box as="span" flex='1' textAlign='left'>
-                              <Text as='b'> {notice.Title}</Text>
-                              </Box>
-                              <AccordionIcon />
-                            </AccordionButton>
-                          </h2>
-                          <AccordionPanel pb={4}>
+                  <Accordion allowToggle>
+                    {noticeData.map((notice) => (
+                      <AccordionItem key={notice.ID}>
+                        <h2>
+                          <AccordionButton>
+                            <Box flex='1' textAlign='left'>
+                              <Text as='b'>{notice.Title}</Text>
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={4}>
                           {notice.Message}
-                          {status == "ADMIN" ? (
-                          <Link
-                  onClick={() => deleteEntry(notice.ID)}
-                  color="red"
-                  cursor="pointer"
-                  ml="2"
-                ><DeleteIcon/></Link> ):null}
-                          </AccordionPanel>
-                        </AccordionItem>
-
-
-                      ))}
-                    </Accordion>
-                  </>
+                          {status === "ADMIN" ? (
+                            <Link
+                              onClick={() => deleteEntry(notice.ID)}
+                              color="red"
+                              cursor="pointer"
+                              ml="2"
+                            >
+                              <DeleteIcon />
+                            </Link>
+                          ) : null}
+                        </AccordionPanel>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
                 ) : (
                   <>
                     <Text mb='8px'>Title:</Text>
@@ -215,21 +204,16 @@ export default function PrivateNotice() {
                       placeholder="Headline or Topic"
                       size="md"
                       value={title}
-                      onChange={(event) =>
-                        setTitle(event.currentTarget.value)
-                      }
+                      onChange={(event) => setTitle(event.currentTarget.value)}
                     />
 
                     <Text mb='8px'>Message:</Text>
                     <Textarea
                       value={notes}
-                      onChange={(event) =>
-                        setNotes(event.currentTarget.value)
-                      }
+                      onChange={(event) => setNotes(event.currentTarget.value)}
                       placeholder='Private messages, Stock tips, Giveaway Link'
                       size='sm'
                     />
-
                   </>
                 )}
               </>
@@ -239,12 +223,10 @@ export default function PrivateNotice() {
           </ModalBody>
 
           <ModalFooter>
-            {modify ? <Button onClick={() => update()}>Update</Button> : null}
-
+            {modify && <Button onClick={update} colorScheme="green" mr={3}>Update</Button>}
             <Button colorScheme="blue" mr={3} onClick={closeModal}>
               Close
             </Button>
-
             {!(status === "GOLD" || status === "ADMIN") && (
               <Link href="/list">
                 <Button colorScheme="teal" variant="solid">
