@@ -58,7 +58,7 @@ export default function Info() {
   const { config, configLoading } = useLoadConfig(); // Load configuration
   const { isConnected, connector, address } = useAccount();
   const { validateURL } = useURLValidation();
-  const isNetworkValid = useNetworkValidation();
+  const { isValid } = useNetworkValidation(); // Get the contract address and validation status
   const router = useRouter();
   const { image } = router.query;
   const domain = image ? String(image).toLowerCase() : "";
@@ -255,7 +255,7 @@ console.log('Parsed Image URL:', parsedContent.url);
             bgSize={"lg"}
             maxH={"80vh"}
           >
-            {isNetworkValid && isDomainMatched(domain) ? (
+            {isValid && isDomainMatched(domain) ? (
               <Stack
                 as={Box}
                 textAlign={"center"}

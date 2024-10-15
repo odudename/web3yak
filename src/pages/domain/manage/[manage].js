@@ -75,7 +75,8 @@ export default function Manage() {
   const router = useRouter();
   const { manage } = router.query;
   const domain = manage ? String(manage).toLowerCase() : "";
-  const isNetworkValid = useNetworkValidation();
+  const { isValid } = useNetworkValidation(); // Get the contract address and validation status
+
   const { ownerAddress } = useDomainInfo(domain);
   const { replaceNullWithEmptyString } = useGlobal();
   const [jsonData, setJsonData] = useState(null); // Initialize jsonData as null
@@ -416,7 +417,7 @@ export default function Manage() {
           bgSize={"lg"}
           maxH={"80vh"}
         >
-          {isNetworkValid && isDomainMatched(domain) ? (
+          {isValid && isDomainMatched(domain) ? (
             <Stack
               as={Box}
               textAlign={"center"}

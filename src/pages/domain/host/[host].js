@@ -65,7 +65,7 @@ export default function Info() {
   const { config, configLoading } = useLoadConfig(); // Load configuration
   const { address } = useAccount();
   const { validateURL } = useURLValidation();
-  const isNetworkValid = useNetworkValidation();
+  const { isValid } = useNetworkValidation(); // Get the contract address and validation status
   const router = useRouter();
   const { host } = router.query;
   const domain = host ? String(host).toLowerCase() : "";
@@ -367,7 +367,7 @@ export default function Info() {
             bgSize={"lg"}
             maxH={"80vh"}
           >
-            {isNetworkValid && isDomainMatched(domain) ? (
+            {isValid && isDomainMatched(domain) ? (
               <Stack
                 as={Box}
                 textAlign={"center"}

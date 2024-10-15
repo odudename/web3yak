@@ -26,7 +26,8 @@ export default function DomainList() {
   const [domainAddr, setDomainAddr] = useState<DomainTuple[]>([]);
   const [error, setError] = useState(""); 
   const [isLoading, setIsLoading] = useState(true);
-  const isNetworkValid = useNetworkValidation();
+  const { isValid, contractAddress } = useNetworkValidation(); // Get the contract address and validation status
+
 
   const setMembershipStatus = (key: string, status: string) => {
     localforage.setItem(key, status);
@@ -35,7 +36,7 @@ export default function DomainList() {
   // Moved w3d import inside useEffect to ensure config is loaded first
   useEffect(() => {
     // Ensure that config and the network are valid before proceeding
-    if (config && isNetworkValid && address && chain) {
+    if (config && isValid && address && chain) {
       setIsLoading(true);
 
       const settings = {
@@ -71,7 +72,7 @@ export default function DomainList() {
           setIsLoading(false);
         });
     }
-  }, [config, isNetworkValid, address, chain]);
+  }, [config, isValid, address, chain]);
 
   useEffect(() => {
     if (domainAddr.length !== 0 && address) {
@@ -121,7 +122,7 @@ export default function DomainList() {
             spacing={{ base: 8, md: 14 }}
             py={{ base: 10, md: 1 }}
           >
-            {isNetworkValid ? (
+            {isValid ? (
               <div>
                 <NextSeo title="My Name List" />
                 <Heading as="h3" fontSize="xl" my={4}>
