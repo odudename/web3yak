@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { Spinner, Box, Text } from "@chakra-ui/react"; // Import Chakra UI components
 import { OTHER_DOMAIN } from "../../configuration/Config";
 
@@ -22,14 +21,15 @@ const ConfigPage = () => {
 
       if (config) {
         try {
-          const response = await axios.get(`/api/create-config?config=${config}`);
-          setMessage(response.data.message);
+          // Dynamically import the configuration file
+          const configModule = await import(`../../configuration/${config}.tsx`);
 
-          if (response.data.message === "Configuration Loaded") {
+          if (configModule) {
+            // If the file exists, set newConfig and create the cookie
             setNewConfig(config);
-
-            // Set the cookie as a session cookie (no 'max-age' or 'expires' attribute)
             document.cookie = `newConfig=${config}; path=/`;
+
+            setMessage("Configuration Loaded");
 
             if (OTHER_DOMAIN === "true") {
               // Force full page reload to apply new configuration
@@ -37,8 +37,8 @@ const ConfigPage = () => {
             }
           }
         } catch (error) {
-          console.error("Error creating file:", error);
-          setError('No Online Configuration file found.');
+          console.error("Error loading config file:", error);
+          setError("No local Configuration file found.");
         } finally {
           setIsLoading(false); // Stop loading after request is done
         }
