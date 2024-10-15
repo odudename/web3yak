@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   if (config) {
     try {
-      const response = await axios.get(`http://localhost/${config}.tsx`);
+      const response = await axios.get(`http://localhost/blockchain/web3domain_org/endpoint/tln/${config}/${config}.tsx`);
       const fileContent = response.data;
 
       const filePath = path.join(process.cwd(), "src", "configuration", `${config}.tsx`);
