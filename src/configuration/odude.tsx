@@ -39,7 +39,7 @@ export const NOTICE_TITLE = "Bulletin board"
 export const NOTICE_NON_MEMBER = "Only the .odude name holder can view bulletin board."
 
 //Banner at front page
-export const DOMAIN_BANNER = "https://web3yak.com/wp-content/uploads/2024/08/yak.png" //290x80 size
+export const DOMAIN_BANNER = "https://web3domain.org/studio/wp-content/uploads/2024/12/odude200x50.png" //290x80 size
 
 //Configuration should match with the chain specified at NETWORKS
 //Leave TOKEN_CONTRACT_ADDRESS to blank for default ETH payment
@@ -50,8 +50,8 @@ export const TOKEN_DECIMAL = "18" //Decimal places of TOKEN_CONTRACT_ADDRESS or 
 export const TOKEN_CONTRACT_ADDRESS=""
 
 export const OTHER_DOMAIN="true" //This will load other domain configuration at your application. 
-export const FAVICON="/favicon.ico";
-export const LOGO="/logo.png";
+export const FAVICON="/odude_favicon.ico";
+export const LOGO="/odude_logo.png";
 
 
 // Menu
