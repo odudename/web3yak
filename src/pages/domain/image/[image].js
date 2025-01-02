@@ -84,7 +84,7 @@ export default function Info() {
 
 const isDomainMatched = (domain) => {
   // Check if the domain is an exact match or ends with any of the TLDs
-  return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+  return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`@${tld}`));
 };
  
 
@@ -190,8 +190,8 @@ console.log('Parsed Image URL:', parsedContent.url);
       const randomNumber = Math.random();
     
       firstImg = jsonData?.image && jsonData.image.startsWith("ipfs://") ? `https://web3domain.org/ipfs/${jsonData.image.replace("ipfs://","")}` : jsonData?.image || config.DOMAIN_IMAGE_URL;
-
-      const url = "https://web3domain.org/endpoint/v1/index.php?domain=" + domain + "&" + randomNumber;
+      console.log(firstImg);
+      const url = "https://web3domain.org/endpoint/v2/index.php?domain=" + domain + "&" + randomNumber;
       // console.log(url);
       const fetchData = async () => {
         try {
@@ -201,10 +201,12 @@ console.log('Parsed Image URL:', parsedContent.url);
           setIsMainLoading(false);
            console.log(json);
 
-           if (json.image) {
+           if (json.img) {
             setNftImage(firstImg);
+            //set nft image
           } else {
             setNftImage(config.DOMAIN_IMAGE_URL); // Fallback to config image URL
+            console.log("fall back to config image");
           }
 
 

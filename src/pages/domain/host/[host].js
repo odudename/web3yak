@@ -101,7 +101,7 @@ export default function Info() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`@${tld}`));
   };
 
   const handleSubmit = (event) => {
@@ -417,7 +417,7 @@ export default function Info() {
                                                 "ipfs://",
                                                 "https://ipfs.io/ipfs/"
                                               )
-                                            : jsonData?.image || DOMAIN_IMAGE_URL
+                                            : jsonData?.image || config.DOMAIN_IMAGE_URL
                                         }
                                         alt={jsonData?.name}
                                       />

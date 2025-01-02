@@ -61,7 +61,8 @@ export default function Info() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+   // console.log(domain);
+    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`@${tld}`));
   };
 
   //copy /@username
@@ -96,13 +97,13 @@ export default function Info() {
         info +
         "&" +
         randomNumber;
-      //console.log(url);
+    //  console.log(url);
       const fetchData = async () => {
         try {
           const response = await fetch(url);
           const json = await response.json();
           setJsonData(json); // Store the json response in the component's state
-          // console.log(json);
+          console.log(json);
         } catch (error) {
           console.log("error", error);
         }

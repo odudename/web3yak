@@ -38,31 +38,37 @@ export default function DomainList() {
     // Ensure that config and the network are valid before proceeding
     if (config && isValid && address && chain) {
       setIsLoading(true);
-
+  
       const settings = {
         matic_rpc_url: process.env.NEXT_PUBLIC_MATIC,
         eth_rpc_url: process.env.NEXT_PUBLIC_ETH,
         fvm_rpc_url: process.env.NEXT_PUBLIC_FILECOIN,
         wallet_pvt_key: process.env.NEXT_PUBLIC_PVT_KEY,
       };
-
+  
       // Dynamically load w3d once the config is available
       const w3d = require("@odude/oduderesolve");
       const resolve = new w3d(settings);
-
+  
       let provider = "";
       if (chain?.network === "filecoin-mainnet") {
         provider = "fvm";
       }
-
+  
       // Fetch the domain list if the user has an address
       resolve
         .getDomainList(address, provider)
         .then((data: DomainTuple[]) => {
-          const filteredDomainAddr = data.filter((item) =>
-            config.DOMAIN_TLDS.some((tld: string) => item[1].endsWith(tld)) ||
-            config.DOMAIN_TLDS.includes(item[1])
-          );
+          const filteredDomainAddr = data.filter((item) => {
+            const domain = item[1]; // Original domain string
+            const tlds = config.DOMAIN_TLDS; // List of TLDs from config
+  
+            // Check for valid exact match or email-like domain
+            return (
+              tlds.includes(domain) || // Exact match
+              tlds.some((tld: string) => domain.endsWith(`@${tld}`)) // Email-like match
+            );
+          });
           setDomainAddr(filteredDomainAddr);
         })
         .catch((err: any) => {
@@ -73,6 +79,9 @@ export default function DomainList() {
         });
     }
   }, [config, isValid, address, chain]);
+  
+  
+  
 
   useEffect(() => {
     if (domainAddr.length !== 0 && address) {

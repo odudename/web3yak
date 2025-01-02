@@ -125,7 +125,7 @@ export default function Manage() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`.${tld}`));
+    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`@${tld}`));
   };
 
   const handleUpload = async () => {

@@ -103,7 +103,7 @@ export default function Info() {
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
     return config?.DOMAIN_TLDS.some(
-      (tld) => domain === tld || domain.endsWith(`.${tld}`)
+      (tld) => domain === tld || domain.endsWith(`@${tld}`)
     );
   };
 
