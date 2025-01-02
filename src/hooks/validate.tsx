@@ -3,16 +3,16 @@ import { useState } from 'react';
 import localforage from 'localforage';
 
 function isValidDomainName(domainName: string): boolean {
-  //console.log('Validating : '+domainName);
-  const dotCount = domainName.split('.').length - 1;
-  if (dotCount > 1) return false;
+  const atCount = domainName.split('@').length - 1;
+  if (atCount > 1) return false;
 
   return (
-    /^[a-z\d]([a-z\d-]*[a-z\d])?(\.[a-z\d]([a-z\d-]*[a-z\d])?)*$/i.test(domainName) &&
+    /^[a-z\d]([a-z\d.]*[a-z\d])?(@[a-z\d]([a-z\d.]*[a-z\d])?)*$/i.test(domainName) &&
     /^.{1,253}$/.test(domainName) &&
-    /^[^.]{1,63}(\.[^.]{1,63})*$/.test(domainName)
+    /^[^@]{1,63}(@[^@]{1,63})*$/.test(domainName)
   );
 }
+
 
 export function useDomainValidation() {
   const [isValidDomain, setIsValidDomain] = useState(true);

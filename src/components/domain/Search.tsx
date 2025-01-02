@@ -23,8 +23,8 @@ const Search = () => {
   const process_domains = (param: string) => {
     let processedParams = config.DOMAIN_TLDS.map((tld: any) => {
       let processedParam = param.toLowerCase();
-      if (!processedParam.endsWith(`.${tld}`)) {
-        processedParam = `${param}.${tld}`;
+      if (!processedParam.endsWith(`@${tld}`)) {
+        processedParam = `${param}@${tld}`;
       }
       return processedParam;
     });
@@ -40,7 +40,7 @@ const Search = () => {
 
      // Check if the last character typed is a dash (-)
      const lastChar = param[param.length - 1];
-     if (lastChar === '-'|| lastChar === '.') {
+     if (lastChar === '-'|| lastChar === '@') {
        // Don't trigger validation and setShowBox
        return;
      }
