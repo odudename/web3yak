@@ -1,16 +1,17 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 var w3d = require("@odude/oduderesolve");
 
-import useDomainInfo from '../../../hooks/domainInfo';
-import { useURLValidation } from '../../../hooks/validate';
-import { useNetworkValidation, checkContract } from '../../../hooks/useNetworkValidation';
+import useDomainInfo from "../../../hooks/domainInfo";
+import { useURLValidation } from "../../../hooks/validate";
+import {
+  useNetworkValidation,
+  checkContract,
+} from "../../../hooks/useNetworkValidation";
 import { useJsonValue } from "../../../hooks/jsonData";
-import { generateJson, generateImage } from '../../../hooks/ipfs';
-import TokenURI from '../../../components/TokenURI'; // Adjust the path to the actual location
+import { generateJson, generateImage } from "../../../hooks/ipfs";
+import TokenURI from "../../../components/TokenURI"; // Adjust the path to the actual location
 import HomeButton from "../../../components/HomeButton"; // Home Button
-
-
 
 import {
   Box,
@@ -41,15 +42,14 @@ import {
   Switch,
   FormHelperText,
   form,
-  CircularProgress
-
+  CircularProgress,
 } from "@chakra-ui/react";
 import {
   Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
-} from '@chakra-ui/react'
+} from "@chakra-ui/react";
 import { FaCopy, FaExternalLinkAlt, FaForward } from "react-icons/fa";
 import { useAccount, useNetwork } from "wagmi";
 import { useLoadConfig } from "../../../hooks/useLoadConfig";
@@ -65,45 +65,39 @@ export default function Info() {
   const { ownerAddress } = useDomainInfo(domain);
   const [jsonData, setJsonData] = useState(null); // Initialize jsonData as null
   const { getValue } = useJsonValue(jsonData);
-  const [error, setError] = useState('');
-  const [claimUrl, setClaimUrl] = useState('http://web3domain.org');
+  const [error, setError] = useState("");
+  const [claimUrl, setClaimUrl] = useState("http://web3domain.org");
   const [isLoading, setIsLoading] = useState(false);
   const [isMainLoading, setIsMainLoading] = useState(true);
-  const [newUrl, setNewUrl] = useState('');
-  const [nftImage, setNftImage] = useState(''); // Initialize with an empty string
-  const bg=useColorModeValue("white", "gray.700");
-  const color=useColorModeValue("gray.700", "whiteAlpha.900");
+  const [newUrl, setNewUrl] = useState("");
+  const [nftImage, setNftImage] = useState(""); // Initialize with an empty string
+  const bg = useColorModeValue("white", "gray.700");
+  const color = useColorModeValue("gray.700", "whiteAlpha.900");
   const [jsonDataNew, setJsonDataNew] = useState(null); // Initialize jsonDataNew as null
   const [show, setShow] = useState(false);
-  let firstImg = '';
+  let firstImg = "";
 
- // let firstImg=jsonData?.image && jsonData.image.startsWith("ipfs://") ? jsonData.image.replace("ipfs://", "https://ipfs.io/ipfs/") : jsonData?.image;
-  
-  //let firstImg = jsonData?.image && jsonData.image.startsWith("ipfs://") ? `https://${jsonData.image.replace("ipfs://","")}.ipfs.nftstorage.link/` : jsonData?.image;
-//console.log(jsonData);
-
-const isDomainMatched = (domain) => {
-  // Check if the domain is an exact match or ends with any of the TLDs
-  return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`@${tld}`));
-};
- 
-
+  const isDomainMatched = (domain) => {
+    // Check if the domain is an exact match or ends with any of the TLDs
+    return config.DOMAIN_TLDS.some(
+      (tld) => domain === tld || domain.endsWith(`@${tld}`)
+    );
+  };
 
   const handleSubmit = (event) => {
     if (event) {
       event.preventDefault();
     }
 
-    console.log('Saving record..');
+    console.log("Saving record..");
 
-   // console.log(jsonData);
+    // console.log(jsonData);
 
-// Update the jsonDataNew object with the new "image" value
-const updatedJsonData = {
-  ...jsonData,
-  image: nftImage, // Set the "image" property to the new value (nftImage)
-};
-
+    // Update the jsonDataNew object with the new "image" value
+    const updatedJsonData = {
+      ...jsonData,
+      image: nftImage, // Set the "image" property to the new value (nftImage)
+    };
 
     setJsonDataNew(updatedJsonData); // Update the state with the modified jsonData
 
@@ -114,37 +108,31 @@ const updatedJsonData = {
   const handleUpload = async () => {
     console.log("Verify record of  " + domain);
     setIsLoading(true);
-    if (domain !== 'undefined') {
-
+    if (domain !== "undefined") {
       //console.log(jsonData);
 
       await genJson();
-
     }
-  }
+  };
 
   async function genImage(domainName) {
-
-    const key = '100';
+    const key = "100";
 
     const imageContent = await generateImage(domainName, key, config.SITE_URL);
     if (imageContent) {
-      console.log('Image content:', imageContent);
+      console.log("Image content:", imageContent);
       // Parse the JSON string into a JavaScript object
-const parsedContent = JSON.parse(imageContent);
-console.log('Parsed Image URL:', parsedContent.url);
-      //https://bafkreiak3kms5q6jn6xjowri3rpwn7agb5zqnenvb4auo3vrwbhedqhbw4.ipfs.nftstorage.link/
-    // setNftImage("https://web3domain.org/ipfs/" + imageContent);
-     setNftImage( parsedContent.url);
-     // setNftImage("https://" + imageContent +".ipfs.nftstorage.link");
-      //console.log(jsonData);
+      const parsedContent = JSON.parse(imageContent);
+      console.log("Parsed Image URL:", parsedContent.url);
+
+      setNftImage(parsedContent.url);
+
       setIsLoading(false);
       setShow(true);
     } else {
-      console.log('Failed to generate image content.');
+      console.log("Failed to generate image content.");
       setIsLoading(false);
     }
-
   }
 
   async function genJson() {
@@ -156,76 +144,69 @@ console.log('Parsed Image URL:', parsedContent.url);
       try {
         const responseObject = JSON.parse(responseText);
         const cidValue = responseObject.link;
-      //  console.log('https://web3domain.org/ipfs/' + cidValue);
-       // setClaimUrl('https://web3domain.org/ipfs/' + cidValue);
-       console.log(cidValue);
-       setClaimUrl(cidValue);
+
+        console.log(cidValue);
+        setClaimUrl(cidValue);
         setIsLoading(false);
-
-
       } catch (error) {
         console.log("Error parsing JSON:", error);
       }
-
     } else {
       console.log("Error generating JSON.");
       setIsLoading(false);
     }
-
   }
 
   const updateImage = async () => {
     console.log("Update the image");
     setIsLoading(true);
     await genImage(domain);
-    
-  }
-
+  };
 
   useEffect(() => {
-
-    setIsMainLoading(true); // Set isLoading to true whenever the effect runs
-
+    setIsMainLoading(true);
+  
     if (domain && config) {
       const randomNumber = Math.random();
-    
-      firstImg = jsonData?.image && jsonData.image.startsWith("ipfs://") ? `https://web3domain.org/ipfs/${jsonData.image.replace("ipfs://","")}` : jsonData?.image || config.DOMAIN_IMAGE_URL;
-      console.log(firstImg);
-      const url = "https://web3domain.org/endpoint/v2/index.php?domain=" + domain + "&" + randomNumber;
-      // console.log(url);
+      const url =
+        "https://web3domain.org/endpoint/v2/index.php?domain=" +
+        domain +
+        "&" +
+        randomNumber;
+  
+      console.log("Fetching data from:", url);
+  
       const fetchData = async () => {
         try {
           const response = await fetch(url);
           const json = await response.json();
-          setJsonData(json); // Store the json response in the component's state
+          setJsonData(json);
           setIsMainLoading(false);
-           console.log(json);
-
-           if (json.img) {
-            setNftImage(firstImg);
-            //set nft image
-          } else {
-            setNftImage(config.DOMAIN_IMAGE_URL); // Fallback to config image URL
-            console.log("fall back to config image");
-          }
-
-
+          console.log(json);
+  
+          const imgUrl =
+            json?.image && json.image.startsWith("ipfs://")
+              ? `https://web3domain.org/ipfs/${json.image.replace("ipfs://", "")}`
+              : json?.image || config.DOMAIN_IMAGE_URL;
+  
+          setNftImage(imgUrl);
+          console.log("Image URL set to:", imgUrl);
         } catch (error) {
-          console.log("error", error);
+          console.log("Error fetching data:", error);
+          setIsMainLoading(false);
         }
       };
-
+  
       fetchData();
-
     }
-  }, [domain,config]);
+  }, [domain, config]);
+  
 
   if (!config) {
     return <div>Error loading configuration.</div>;
   }
 
   return (
-
     <Flex
       align="center"
       justify="center"
@@ -242,12 +223,8 @@ console.log('Parsed Image URL:', parsedContent.url);
         bgSize={"lg"}
         maxH={"80vh"}
       >
-        <Container
-          maxW={"3xl"}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-        <HomeButton domain={domain} />
+        <Container maxW={"3xl"} alignItems={"center"} justifyContent={"center"}>
+          <HomeButton domain={domain} />
 
           <Box
             textAlign="center"
@@ -264,124 +241,150 @@ console.log('Parsed Image URL:', parsedContent.url);
                 spacing={{ base: 2, md: 2 }}
                 py={{ base: 10, md: 6 }}
               >
-
                 {isMainLoading ? (
-                  <Box padding='6' boxShadow='lg' bg='white'>
-                    <SkeletonCircle size='10' />
-                    <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='3' />
+                  <Box padding="6" boxShadow="lg" bg="white">
+                    <SkeletonCircle size="10" />
+                    <SkeletonText
+                      mt="4"
+                      noOfLines={4}
+                      spacing="4"
+                      skeletonHeight="3"
+                    />
                   </Box>
                 ) : (
                   <>
                     {error ? (
                       <p>Error: {error}</p>
                     ) : (
-                      <p>
-
-                        {address == ownerAddress ?
+                      <>
+                        {address == ownerAddress ? (
                           <form onSubmit={handleSubmit}>
                             <Card
-                              direction={{ base: 'column', sm: 'row' }}
-                              overflow='hidden'
-                              variant='outline'
-                              align='center'
+                              direction={{ base: "column", sm: "row" }}
+                              overflow="hidden"
+                              variant="outline"
+                              align="center"
                             >
-{nftImage == config.DOMAIN_IMAGE_URL ?  (
-                              <Image
-                                ml={2}
-                                boxSize='200px'
-                                src={firstImg}
-                                alt={jsonData?.name}
-                              />
-                              ):(
-
+                              {nftImage == config.DOMAIN_IMAGE_URL ? (
+                          <Image
+                          ml={2}
+                          boxSize="200px"
+                          src={nftImage}
+                          alt={jsonData?.name || "Domain Image"}
+                        />
+                        
+                              ) : (
                                 <Image
-                                ml={2}
-                                boxSize='300px'
-                                src={nftImage}
-                                alt={jsonData?.name} 
+                                  ml={2}
+                                  boxSize="300px"
+                                  src={nftImage}
+                                  alt={jsonData?.name}
                                 />
                               )}
                               <Stack>
                                 <CardBody>
-                                {nftImage == config.DOMAIN_IMAGE_URL ?  (
-
-
-                                <Button size="sm" variant='solid' colorScheme='blue' onClick={() => updateImage()}>
-                                        {isLoading ? (
-
-                                            <>  <CircularProgress isIndeterminate size="24px" /> Wait... </>
-                                          ) : (
-                                            'Generate NFT Image'
-                                          )}
+                                  {nftImage == config.DOMAIN_IMAGE_URL ? (
+                                    <Button
+                                      size="sm"
+                                      variant="solid"
+                                      colorScheme="blue"
+                                      onClick={() => updateImage()}
+                                    >
+                                      {isLoading ? (
+                                        <>
+                                          {" "}
+                                          <CircularProgress
+                                            isIndeterminate
+                                            size="24px"
+                                          />{" "}
+                                          Wait...{" "}
+                                        </>
+                                      ) : (
+                                        "Generate NFT Image"
+                                      )}
                                     </Button>
-                                       )
-                                      :
-                                      (<></>)}
+                                  ) : (
+                                    <></>
+                                  )}
                                 </CardBody>
-                             
 
                                 <CardFooter>
-                         
                                   {address == ownerAddress ? (
                                     <div>
-                                      { show ?  (
-                                      <Button size="sm" rightIcon={<FaForward />} colorScheme="teal" type="submit" width="half" mt={4}>
-                                        Replace Image
-                                      </Button>
-                                   
-                                      ): (<></>)}
-                                      {jsonDataNew != null ? (
-                                        <Button size="sm" ml="1" rightIcon={<FaForward />} colorScheme="green" width="half" mt={4} onClick={() => handleUpload()} >
-
-                                          {isLoading ? (
-
-                                            <>  <CircularProgress isIndeterminate size="24px" /> Submitting </>
-                                          ) : (
-                                            'Verify'
-                                          )}
-
+                                      {show ? (
+                                        <Button
+                                          size="sm"
+                                          rightIcon={<FaForward />}
+                                          colorScheme="teal"
+                                          type="submit"
+                                          width="half"
+                                          mt={4}
+                                        >
+                                          Replace Image
                                         </Button>
                                       ) : (
                                         <></>
                                       )}
-
-                              &nbsp;
-                                      {claimUrl != 'http://web3domain.org' ? (<TokenURI domainName={domain} TokenURI={claimUrl} />) : (<></>)}
-
+                                      {jsonDataNew != null ? (
+                                        <Button
+                                          size="sm"
+                                          ml="1"
+                                          rightIcon={<FaForward />}
+                                          colorScheme="green"
+                                          width="half"
+                                          mt={4}
+                                          onClick={() => handleUpload()}
+                                        >
+                                          {isLoading ? (
+                                            <>
+                                              {" "}
+                                              <CircularProgress
+                                                isIndeterminate
+                                                size="24px"
+                                              />{" "}
+                                              Submitting{" "}
+                                            </>
+                                          ) : (
+                                            "Verify"
+                                          )}
+                                        </Button>
+                                      ) : (
+                                        <></>
+                                      )}
+                                      &nbsp;
+                                      {claimUrl != "http://web3domain.org" ? (
+                                        <TokenURI
+                                          domainName={domain}
+                                          TokenURI={claimUrl}
+                                        />
+                                      ) : (
+                                        <></>
+                                      )}
                                     </div>
-                                  ) : (<>Not authorized</>)}
-
-
+                                  ) : (
+                                    <>Not authorized</>
+                                  )}
                                 </CardFooter>
                               </Stack>
                             </Card>
                           </form>
-                          :
-
-                          <Alert status='error'>
+                        ) : (
+                          <Alert status="error">
                             <AlertIcon />
                             <AlertTitle>You are not authorized.</AlertTitle>
                           </Alert>
-
-                        }
-
-                      </p>
-
-
-
+                        )}
+                      </>
                     )}
                   </>
                 )}
-
               </Stack>
-            ) :
-              (<>{config.NETWORK_ERROR}</>)
-            }
+            ) : (
+              <>{config.NETWORK_ERROR}</>
+            )}
           </Box>
         </Container>
-
       </Box>
-
     </Flex>
-  )
+  );
 }
