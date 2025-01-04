@@ -71,7 +71,8 @@ export default function Info() {
   const primaryDomain = window.location.origin;
   //console.log(primaryDomain);
   const { onCopy: onCopyPrimaryDomain, value: primaryDomainValue } =
-    useClipboard(primaryDomain + "/@" + info);
+  useClipboard(primaryDomain + (info.includes("@") ? "/" + info : "/@" + info));
+
 
   const enlarge = async () => {
     onOpen(); // Open the modal to display the response
