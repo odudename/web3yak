@@ -36,7 +36,7 @@ export const Logo = ({ onToggle, isOpen }: any) => {
     <HStack>
       <>
         <Link
-          href={"/#1.61"}
+          href={"/#1.62"}
           textAlign={textAlign as any}
           fontFamily={"heading"}
           color={textColor}

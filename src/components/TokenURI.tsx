@@ -47,8 +47,8 @@ var CONTRACT_ADDRESS = ''; // No contract found
   const toast = useToast();
 
   const randomNumber = Math.random();
-  const url = "https://web3domain.org/endpoint/v1/index.php?domain=" + domainName + "&" + randomNumber+"&update=yes";
- 
+  //const url = "https://web3domain.org/endpoint/v1/index.php?domain=" + domainName + "&" + randomNumber+"&update=yes";
+  const url = "https://web3domain.org/endpoint/v3/index.php?name=" + domainName + "&" + randomNumber+"&update=yes&type=uri";
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
   const [errorHandled, setErrorHandled] = useState(false); // New state variable to track if error has been handled

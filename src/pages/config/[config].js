@@ -29,7 +29,7 @@ const ConfigPage = () => {
             setNewConfig(config);
             document.cookie = `newConfig=${config}; path=/`;
 
-            setMessage("Configuration Loaded");
+            setMessage("Configuration Loading...");
 
             if (OTHER_DOMAIN === "true") {
               // Force full page reload to apply new configuration

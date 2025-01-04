@@ -169,7 +169,7 @@ export default function Info() {
     if (domain && config) {
       const randomNumber = Math.random();
       const url =
-        "https://web3domain.org/endpoint/v2/index.php?domain=" +
+        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
         domain +
         "&" +
         randomNumber;
@@ -283,7 +283,7 @@ export default function Info() {
                               )}
                               <Stack>
                                 <CardBody>
-                                  {nftImage == config.DOMAIN_IMAGE_URL ? (
+                                  {
                                     <Button
                                       size="sm"
                                       variant="solid"
@@ -303,9 +303,8 @@ export default function Info() {
                                         "Generate NFT Image"
                                       )}
                                     </Button>
-                                  ) : (
-                                    <></>
-                                  )}
+                                  
+                            }
                                 </CardBody>
 
                                 <CardFooter>

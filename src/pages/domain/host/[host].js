@@ -228,7 +228,7 @@ export default function Info() {
     if (domain, config) {
       const randomNumber = Math.random();
       const url =
-        "https://web3domain.org/endpoint/v1/index.php?domain=" +
+        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
         domain +
         "&" +
         randomNumber;

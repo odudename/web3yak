@@ -279,11 +279,11 @@ export default function Manage() {
     const randomNumber = Math.random(); // Generate a random number
     if (domain && config) {
       const url =
-        "https://web3domain.org/endpoint/v1/index.php?domain=" +
+        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
         domain +
-        "&update=yes&" +
+        "&" +
         randomNumber;
-      console.log(url);
+     // console.log(url);
       setImage(config.DOMAIN_IMAGE_URL);
       const fetchData = async () => {
         try {
@@ -291,7 +291,7 @@ export default function Manage() {
           const json = await response.json();
           setJsonData(json); // Store the json response in the component's state
           setIsMainLoading(false);
-          console.log(json);
+         // console.log(json);
         } catch (error) {
           console.log("error", error);
         }
