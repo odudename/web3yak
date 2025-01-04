@@ -28,7 +28,7 @@ import {
   IconButton,
   useClipboard,
   useDisclosure,
-  Spinner
+  Spinner,
 } from "@chakra-ui/react";
 import { FaCopy, FaExternalLinkAlt } from "react-icons/fa";
 import { useAccount } from "wagmi";
@@ -61,8 +61,10 @@ export default function Info() {
 
   const isDomainMatched = (domain) => {
     // Check if the domain is an exact match or ends with any of the TLDs
-   // console.log(domain);
-    return config.DOMAIN_TLDS.some(tld => domain === tld || domain.endsWith(`@${tld}`));
+    // console.log(domain);
+    return config.DOMAIN_TLDS.some(
+      (tld) => domain === tld || domain.endsWith(`@${tld}`)
+    );
   };
 
   //copy /@username
@@ -82,7 +84,7 @@ export default function Info() {
       matic_rpc_url: process.env.NEXT_PUBLIC_MATIC,
       eth_rpc_url: process.env.NEXT_PUBLIC_ETH,
       fvm_rpc_url: process.env.NEXT_PUBLIC_FILECOIN,
-      wallet_pvt_key: process.env.NEXT_PUBLIC_PVT_KEY
+      wallet_pvt_key: process.env.NEXT_PUBLIC_PVT_KEY,
     };
 
     const resolve = new w3d(settings);
@@ -93,11 +95,11 @@ export default function Info() {
     if (info) {
       const randomNumber = Math.random();
       const url =
-        "https://web3domain.org/endpoint/v2/index.php?domain=" +
+        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
         info +
         "&" +
         randomNumber;
-    //  console.log(url);
+      //  console.log(url);
       const fetchData = async () => {
         try {
           const response = await fetch(url);
@@ -127,37 +129,38 @@ export default function Info() {
 
   // Use another useEffect to set webUrl
   useEffect(() => {
-    var web_url = "";
-    var web3_url = "";
-    if (jsonData!=null) {
-      if (jsonData.web3 !== "") {
-        // If the '51' property exists in jsonData.records and its value is not empty
-        // Set web3_url
-        web3_url = jsonData.web3;
+    let web_url = "";
+    let web3_url = "";
+
+    if (jsonData != null) {
+      const records = jsonData.records || {};
+
+      // Extract `web3_url` from records property `51` if it exists and is not empty
+      if (records["51"]?.value) {
+        web3_url = records["51"].value;
       }
 
-      if (jsonData.web2 !== "" && jsonData.web2 != null) {
-        // console.log(jsonData);
-        if (jsonData.web2 != "https://ipfs.io/ipfs/null") {
-          if (jsonData.web2.startsWith("https://")) {
-            web_url = jsonData.web2;
+      // Extract `web_url` from records property `50` if it exists and is not empty
+      if (records["50"]?.value) {
+        const recordWeb2 = records["50"].value;
+
+        if (recordWeb2 !== "https://ipfs.io/ipfs/null") {
+          if (recordWeb2.startsWith("https://")) {
+            web_url = recordWeb2;
           } else {
-            web_url = "https://ipfs.io/ipfs/" + jsonData.web2;
+            web_url = "https://ipfs.io/ipfs/" + recordWeb2;
           }
         }
       }
 
+      // Prioritize `web3_url` over `web_url`
       if (web3_url !== "") {
         setWebUrl(web3_url);
-        // console.log(web3_url);
       } else if (web_url !== "") {
         setWebUrl(web_url);
-        // console.log(web_url);
       }
     }
   }, [jsonData]);
-
-  
 
   return (
     <Flex
@@ -228,15 +231,15 @@ export default function Info() {
                           ml={2}
                           boxSize="150px"
                           src={
-                            jsonData?.img &&
-                            jsonData.img.startsWith("ipfs://")
-                              ? `https://${jsonData.img.replace(
+                            jsonData?.image &&
+                            jsonData.image.startsWith("ipfs://")
+                              ? `https://${jsonData.image.replace(
                                   "ipfs://",
                                   ""
                                 )}.ipfs.nftstorage.link/`
-                              : jsonData?.img || config.DOMAIN_IMAGE_URL
+                              : jsonData?.image || config.DOMAIN_IMAGE_URL
                           }
-                          alt={jsonData?.img}
+                          alt={jsonData?.image}
                           onClick={() => enlarge()}
                         />
 
@@ -252,13 +255,14 @@ export default function Info() {
                                   <Image
                                     ml={2}
                                     src={
-                                      jsonData?.img &&
-                                      jsonData.img.startsWith("ipfs://")
-                                        ? `https://${jsonData.img.replace(
+                                      jsonData?.image &&
+                                      jsonData.image.startsWith("ipfs://")
+                                        ? `https://${jsonData.image.replace(
                                             "ipfs://",
                                             ""
                                           )}.ipfs.nftstorage.link/`
-                                        : jsonData?.img || config.DOMAIN_IMAGE_URL
+                                        : jsonData?.image ||
+                                          config.DOMAIN_IMAGE_URL
                                     }
                                     alt={jsonData?.name}
                                   />
@@ -285,8 +289,12 @@ export default function Info() {
                                 variant="outline"
                               >
                                 <Button onClick={onCopyPrimaryDomain}>
-                                  {primaryDomain}/@{info}
+                                  {primaryDomain}
+                                  {info.includes("@")
+                                    ? `/${info}`
+                                    : `/@${info}`}
                                 </Button>
+
                                 <IconButton
                                   aria-label="Copy"
                                   icon={<FaCopy />}
@@ -297,7 +305,8 @@ export default function Info() {
                           </CardBody>
 
                           <CardFooter>
-                            {address == ownerAddress && isDomainMatched(info) ? (
+                            {address == ownerAddress &&
+                            isDomainMatched(info) ? (
                               <Stack direction="row" spacing="1">
                                 <Button
                                   size="sm"
