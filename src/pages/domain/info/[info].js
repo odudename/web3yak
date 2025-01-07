@@ -71,7 +71,10 @@ export default function Info() {
   const primaryDomain = window.location.origin;
   //console.log(primaryDomain);
   const { onCopy: onCopyPrimaryDomain, value: primaryDomainValue } =
-  useClipboard(primaryDomain + (info.includes("@") ? "/" + info : "/@" + info));
+  useClipboard(
+    primaryDomain +
+      (typeof info === "string" && info.includes("@") ? "/" + info : "/@" + info)
+  );
 
 
   const enlarge = async () => {
