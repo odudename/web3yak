@@ -32,7 +32,7 @@ export function useDomainValidation() {
 export function useURLValidation() {
   const validateURL = (param: string) => {
     if (param != null && param != "") {
-      const input = param.toLowerCase(); // Convert input to lowercase
+      const input = typeof param === 'string' ? param.toLowerCase() : ''; // Convert input to lowercase if it's a string
 
       //console.log("validating URL of: "+input);
       if (input.trim() === '') {

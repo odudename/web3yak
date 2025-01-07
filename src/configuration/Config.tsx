@@ -1,17 +1,17 @@
 import { ThemingProps } from '@chakra-ui/react'
 import { polygon} from '@wagmi/chains'
 
-export const SITE_NAME = 'Web3Domain App'
+export const SITE_NAME = 'Web3Yak'
 export const SITE_DESCRIPTION = 'ODude Name Service'
-export const SITE_URL = 'https://www.odude.com/'
+export const SITE_URL = 'https://www.web3yak.com/'
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_SCHEME: ThemingProps['colorScheme'] = 'gray'
 export const THEME_CONFIG = { initialColorMode: THEME_INITIAL_COLOR }
 
 export const SOCIAL_MEDIUM = '' //Leave it blank if no values
-export const SOCIAL_TWITTER = 'odudename'
-export const SOCIAL_GITHUB = 'odudename'
+export const SOCIAL_TWITTER = 'web3yak'
+export const SOCIAL_GITHUB = 'web3yak'
 export const SOCIAL_LINKEDIN = ''
 export const SOCIAL_DISCORD = ''
 

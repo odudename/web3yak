@@ -175,9 +175,9 @@ export default function Info() {
       const responseText = await response.text();
       try {
         const responseObject = JSON.parse(responseText);
+        console.log(responseObject);
         const cidValue = responseObject.cid;
-        const cidUrl = "https://ipfs.io/ipfs/" + cidValue;
-        // console.log(cidUrl);
+        const cidUrl = responseObject.link;
         setWeb2Url(cidUrl);
 
         const updatedJsonData = {
