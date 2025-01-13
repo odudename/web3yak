@@ -20,7 +20,7 @@ export const NETWORKS = [filecoin]; //polygon, filecoin, polygonMumbai
 export const NETWORK_ERROR = "Switch to Filecoin Mainnet" //Change network name as required
 
 //Domain Information. It only supports single domain name. 
-export const DOMAIN_TLDS = ['filecoin', 'fvm']; // Array of TLDs
+export const DOMAIN_TLDS = ['filecoin','fil']; // Array of TLDs
 export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/fvm.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 314 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
 export const DOMAIN_DESCRIPTION = 'FVM Name service'

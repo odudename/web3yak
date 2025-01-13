@@ -1,8 +1,8 @@
 import { ThemingProps } from '@chakra-ui/react'
 import { polygon} from '@wagmi/chains'
 
-export const SITE_NAME = 'ODude Name Service'
-export const SITE_DESCRIPTION = 'ODude Name Service'
+export const SITE_NAME = 'ODude AI Name'
+export const SITE_DESCRIPTION = 'ODude @AI Name'
 export const SITE_URL = 'https://www.odude.com/'
 
 export const THEME_INITIAL_COLOR = 'system'
@@ -20,12 +20,12 @@ export const NETWORKS = [polygon]; //polygon, filecoin, polygonMumbai
 export const NETWORK_ERROR = "Unsupported Blockchain Network" //Change network name as required
 
 //Domain Information. It only supports single domain name. 
-export const DOMAIN_TLDS = ['odude']; // Array of TLDs
-export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/default.jpg' //Image path starts with ipfs:// or https://
+export const DOMAIN_TLDS = ['ai']; // Array of TLDs
+export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/ai.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 137 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
-export const DOMAIN_DESCRIPTION = 'ODude Name service'
+export const DOMAIN_DESCRIPTION = 'ODude AI Name'
 export const DOMAIN_TYPE = "W3D" //W3D for polygon, FVM for Filecoin net
-export const DOMAIN_TITLE = "Join our ODude Community" //Title above the search input field. 
+export const DOMAIN_TITLE = "Join our AI Community" //Title above the search input field. 
 export const DOMAIN_PLACEHOLDER = "Search for a name" //Placeholder for search input field 
 
 //Admin wallet address of TLD mentioned at DOMAIN_TLD
@@ -36,7 +36,7 @@ export const PROJECT_ID="2cb7b50126c5f7da8bc2dc5cfef00896" //https://cloud.walle
 
 //Bulletin board at front page
 export const NOTICE_TITLE = "Bulletin board"
-export const NOTICE_NON_MEMBER = "Only the .odude name holder can view bulletin board."
+export const NOTICE_NON_MEMBER = "Only the @ai name holder can view bulletin board."
 
 //Banner at front page
 export const DOMAIN_BANNER = "https://web3domain.org/studio/wp-content/uploads/2024/12/odude200x50.png" //290x80 size

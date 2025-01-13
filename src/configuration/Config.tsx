@@ -1,17 +1,17 @@
 import { ThemingProps } from '@chakra-ui/react'
 import { polygon} from '@wagmi/chains'
 
-export const SITE_NAME = 'Web3Yak'
+export const SITE_NAME = 'ODude Name'
 export const SITE_DESCRIPTION = 'ODude Name Service'
-export const SITE_URL = 'https://www.web3yak.com/'
+export const SITE_URL = 'https://www.odude.com/'
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_SCHEME: ThemingProps['colorScheme'] = 'gray'
 export const THEME_CONFIG = { initialColorMode: THEME_INITIAL_COLOR }
 
 export const SOCIAL_MEDIUM = '' //Leave it blank if no values
-export const SOCIAL_TWITTER = 'web3yak'
-export const SOCIAL_GITHUB = 'web3yak'
+export const SOCIAL_TWITTER = 'odudename'
+export const SOCIAL_GITHUB = 'odudename'
 export const SOCIAL_LINKEDIN = ''
 export const SOCIAL_DISCORD = ''
 
@@ -21,7 +21,7 @@ export const NETWORK_ERROR = "Unsupported Blockchain Network" //Change network n
 
 //Domain Information. It only supports single domain name. 
 export const DOMAIN_TLDS = ['btc', 'eth','web3']; // Array of TLDs
-export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/dude.jpg' //Image path starts with ipfs:// or https://
+export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/btc.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 137 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
 export const DOMAIN_DESCRIPTION = 'ODude Name service'
 export const DOMAIN_TYPE = "W3D" //W3D for polygon, FVM for Filecoin net
@@ -36,7 +36,7 @@ export const PROJECT_ID="2cb7b50126c5f7da8bc2dc5cfef00896" //https://cloud.walle
 
 //Bulletin board at front page
 export const NOTICE_TITLE = "Bulletin board"
-export const NOTICE_NON_MEMBER = "Only the .eth & .btc name holder can view bulletin board."
+export const NOTICE_NON_MEMBER = "Only the @eth & @btc name holder can view bulletin board."
 
 //Banner at front page
 export const DOMAIN_BANNER = "https://web3domain.org/studio/wp-content/uploads/2024/12/yak.png" //290x80 size
