@@ -3,7 +3,7 @@ import { ThemingProps } from '@chakra-ui/react'
 import { filecoin} from '@wagmi/chains'
 export const SITE_NAME = 'FVM Name Service'
 export const SITE_DESCRIPTION = 'Filecoin Name Service'
-export const SITE_URL = 'https://www.web3yak.com/'
+export const SITE_URL = 'https://filecoin.io/'
 
 export const THEME_INITIAL_COLOR = 'system'
 export const THEME_COLOR_SCHEME: ThemingProps['colorScheme'] = 'green'
@@ -20,12 +20,12 @@ export const NETWORKS = [filecoin]; //polygon, filecoin, polygonMumbai
 export const NETWORK_ERROR = "Switch to Filecoin Mainnet" //Change network name as required
 
 //Domain Information. It only supports single domain name. 
-export const DOMAIN_TLDS = ['filecoin','fil']; // Array of TLDs
+export const DOMAIN_TLDS = ['fil']; // Array of TLDs
 export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/fvm.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 314 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
 export const DOMAIN_DESCRIPTION = 'FVM Name service'
 export const DOMAIN_TYPE = "FVM" //W3D for polygon, FVM for Filecoin net
-export const DOMAIN_TITLE = "Join FVM Community" //Title above the search input field. 
+export const DOMAIN_TITLE = "Join Filecoin Community" //Title above the search input field. 
 export const DOMAIN_PLACEHOLDER = "Search for a name" //Placeholder for search input field 
 
 //Admin wallet address of TLD mentioned at DOMAIN_TLD
@@ -36,7 +36,7 @@ export const PROJECT_ID="2cb7b50126c5f7da8bc2dc5cfef00896" //https://cloud.walle
 
 //Bulletin board at front page
 export const NOTICE_TITLE = "Bulletin board"
-export const NOTICE_NON_MEMBER = "Only the .fvm & .filecoin name holder can view bulletin board."
+export const NOTICE_NON_MEMBER = "Only the @fil name holder can view bulletin board."
 
 //Banner at front page
 export const DOMAIN_BANNER = "https://web3domain.org/endpoint/images/filecoin_banner.png" //290x80 size
@@ -66,9 +66,9 @@ export const NAV_ITEMS = [
         href: "https://odude.com",
       },
       {
-        label: "Web3Yak",
-        subLabel: "Web3Yak.com",
-        href: "https://web3yak.com",
+        label: "Filecoin",
+        subLabel: "Filecoin.io",
+        href: "https://filecoin.io",
       },
       {
         label: "Web3Domain",
@@ -78,7 +78,7 @@ export const NAV_ITEMS = [
     ],
   },
   {
-    label: "Names",
+    label: "FVM Names",
     href: "/list",
   },
 ];

@@ -39,7 +39,7 @@ export const NOTICE_TITLE = "Bulletin board"
 export const NOTICE_NON_MEMBER = "Only the @ai name holder can view bulletin board."
 
 //Banner at front page
-export const DOMAIN_BANNER = "https://web3domain.org/studio/wp-content/uploads/2024/12/odude200x50.png" //290x80 size
+export const DOMAIN_BANNER = "https://odude.com/app/wp-content/uploads/2025/01/ai_banner.png" //290x80 size
 
 //Configuration should match with the chain specified at NETWORKS
 //Leave TOKEN_CONTRACT_ADDRESS to blank for default ETH payment
