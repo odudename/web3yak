@@ -123,9 +123,12 @@ export default function Info() {
       console.log("Image content:", imageContent);
       // Parse the JSON string into a JavaScript object
       const parsedContent = JSON.parse(imageContent);
-      console.log("Parsed Image URL:", parsedContent.url);
+      const randomNum = Math.random().toString(36).substring(7);
+      const imageUrlWithNoCache = `${parsedContent.url}?${randomNum}`;
+      console.log("Parsed Image URL with no cache:", imageUrlWithNoCache);
+      setNftImage(imageUrlWithNoCache);
 
-      setNftImage(parsedContent.url);
+    //  setNftImage(parsedContent.url);
 
       setIsLoading(false);
       setShow(true);
