@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import useDomainInfo from "../../../hooks/domainInfo";
+import {useDomainInfo} from "../../../hooks/domainInfo";
 import { useURLValidation } from "../../../hooks/validate";
 import { useNetworkValidation } from "../../../hooks/useNetworkValidation";
 import { useJsonValue, getParent } from "../../../hooks/jsonData";

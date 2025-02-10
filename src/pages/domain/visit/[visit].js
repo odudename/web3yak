@@ -11,7 +11,7 @@ import {
   AlertTitle,
   Progress,
 } from "@chakra-ui/react";
-import useDomainInfo from "../../../hooks/domainInfo"; // Correct hook import
+import {useDomainInfo} from "../../../hooks/domainInfo"; // Correct hook import
 
 // Helper function to transform IPFS CIDs into proper URLs
 const transformIpfsUrl = (url) => {

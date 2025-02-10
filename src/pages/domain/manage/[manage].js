@@ -7,7 +7,7 @@ import TokenURI from "../../../components/TokenURI"; // Adjust the path to the a
 import { useAccount } from "wagmi";
 import { useNetworkValidation } from "../../../hooks/useNetworkValidation";
 import Link from "next/link";
-import useDomainInfo from "../../../hooks/domainInfo";
+import {useDomainInfo} from "../../../hooks/domainInfo";
 import useGlobal from "../../../hooks/global";
 import HomeButton from "../../../components/HomeButton"; // Home Button
 

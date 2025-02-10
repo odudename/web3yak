@@ -11,7 +11,7 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import abiFile from "../../../abiFile.json";
-import useDomainInfo from "../../../hooks/domainInfo";
+import {useDomainInfo} from "../../../hooks/domainInfo";
 import { useNetworkValidation } from "../../../hooks/useNetworkValidation";
 import HomeButton from "../../../components/HomeButton"; // Home Button
 import {

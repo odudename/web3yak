@@ -8,7 +8,7 @@ import { useLoadConfig } from "../../../hooks/useLoadConfig";
 import { generateJson } from "../../../hooks/ipfs";
 import { useDomainValidation } from "../../../hooks/validate";
 import useGlobal from "../../../hooks/global";
-import useDomainInfo from "../../../hooks/domainInfo";
+import {useDomainInfo} from "../../../hooks/domainInfo";
 import { useNetworkValidation } from "../../../hooks/useNetworkValidation";
 import Notice from "../../../components/domain/notice";
 import abiFile from "../../../abiFile.json";

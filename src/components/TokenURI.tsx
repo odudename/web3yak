@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useDomainInfo from '../hooks/domainInfo'; // Adjust the path to the actual location
+import {useDomainInfo} from '../hooks/domainInfo'; // Adjust the path to the actual location
 import { FaStop } from "react-icons/fa";
 import {
   usePrepareContractWrite,

@@ -15,6 +15,14 @@ interface DomainInfo {
   isError: boolean;
 }
 
+interface AddressInfo {
+
+  odudeName: string | null;
+  isLoading: boolean;
+  isError: boolean;
+}
+
+
 function useDomainInfo(domainName: string): DomainInfo {
   const [domainId, setDomainId] = useState<number | null>(null);
   const [ownerAddress, setOwnerAddress] = useState<string | null>(null);
@@ -81,4 +89,36 @@ function useDomainInfo(domainName: string): DomainInfo {
   };
 }
 
-export default useDomainInfo;
+
+function useAddressInfo(walletAddress: string): AddressInfo {
+  const [odudeName, setOdudeName] = useState<string | null>(null);
+  const { isValid, contractAddress } = useNetworkValidation(); // Get the contract address and validation status
+  const { data, isError, isLoading } = useContractReads({
+    contracts: [
+      {
+        address: contractAddress as `0x${string}`,
+        abi: abiFile.abi,
+        functionName: 'getReverse',
+        args: [walletAddress],
+      },
+    ],
+  });
+
+  useEffect(() => {
+    if (data && !isError) {
+      const dataArray = data as [string]; // Adjust the types as needed
+      //console.log(dataArray[0]);
+      setOdudeName(dataArray[0]);
+
+    }
+  }, [data, isError]);
+
+
+  return {
+    odudeName,
+    isLoading,
+    isError,
+  };
+}
+
+export { useDomainInfo, useAddressInfo };

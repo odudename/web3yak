@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 var w3d = require("@odude/oduderesolve");
 
-import useDomainInfo from "../../../hooks/domainInfo";
+import {useDomainInfo} from "../../../hooks/domainInfo";
 import { useURLValidation } from "../../../hooks/validate";
 import {
   useNetworkValidation,
