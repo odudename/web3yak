@@ -15,7 +15,7 @@ import {
   Button,
   useDisclosure
 } from "@chakra-ui/react";
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, NotAllowedIcon } from '@chakra-ui/icons';
 import localforage from "localforage";
 
 const AccountStatus = () => {
@@ -40,6 +40,7 @@ const AccountStatus = () => {
   }, [address, isConnected]);
 
   useEffect(() => {
+    if (isConnected) {
     const tlds = config?.DOMAIN_TLDS || []; // List of TLDs from config
 
     if (displayName) {
@@ -52,10 +53,11 @@ const AccountStatus = () => {
       setStatus('REGULAR');
       setMembershipStatus(walletAddress || '', 'REGULAR');
     }
+  }
   }, [displayName, config, walletAddress]);
 
   useEffect(() => {
-    if (status) {
+    if (status && isConnected) {
       const timeoutId = setTimeout(() => {
         async function getStatus() {
           try {
@@ -86,9 +88,17 @@ const AccountStatus = () => {
 
   return (
     <div>
+        {isConnected ? (
       <Button onClick={onOpen} m='3'>
-        <CheckCircleIcon color="blue.500" />
+        {status === 'GOLD' ? (
+          <CheckCircleIcon color="blue.500" />
+        ) : (
+          <NotAllowedIcon color="red.500" />
+        )}
       </Button>
+         ) : (
+          <p></p>
+        )}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

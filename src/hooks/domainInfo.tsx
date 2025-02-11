@@ -121,4 +121,5 @@ function useAddressInfo(walletAddress: string): AddressInfo {
   };
 }
 
+export type { AddressInfo };
 export { useDomainInfo, useAddressInfo };
