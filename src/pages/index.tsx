@@ -13,7 +13,6 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
-import AccountStatus from "../components/AccountStatus";
 
 
 const Home: NextPage = () => {
@@ -67,7 +66,7 @@ const Home: NextPage = () => {
           </Heading>
           <Box flex="1" textAlign="right">
             <PrivateNotice />
-            <AccountStatus /> 
+
           </Box>
         </Flex>
         <div>

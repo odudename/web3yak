@@ -108,7 +108,7 @@ const AccountStatus = () => {
             {isConnected ? (
               <div>
                 <p>Connected Wallet Address: {walletAddress}</p>
-                <p>Odude Name: {displayName}</p>
+                <p>ODude Name: {displayName}</p>
                 <p>Membership Status: {status}</p>
               </div>
             ) : (

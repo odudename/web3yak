@@ -20,7 +20,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Logo } from "../../Reusables/helper";
 import { useLoadConfig } from '../../hooks/useLoadConfig';
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons"; // Import icons
-
+import AccountStatus from "../AccountStatus";
 interface Props {
   className?: string;
 }
@@ -94,6 +94,7 @@ export function Header(props: Props) {
             largeScreen: false,
           }}
         />
+                    <AccountStatus /> 
         <ThemeSwitcher />
       </Flex>
 
