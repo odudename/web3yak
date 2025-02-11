@@ -67,7 +67,7 @@ const Home: NextPage = () => {
           </Heading>
           <Box flex="1" textAlign="right">
             <PrivateNotice />
-       
+            <AccountStatus /> 
           </Box>
         </Flex>
         <div>
