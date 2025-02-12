@@ -21,6 +21,7 @@ import { Logo } from "../../Reusables/helper";
 import { useLoadConfig } from '../../hooks/useLoadConfig';
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons"; // Import icons
 import AccountStatus from "../AccountStatus";
+import { useNetworkValidation } from "../../hooks/useNetworkValidation";
 interface Props {
   className?: string;
 }
@@ -36,7 +37,7 @@ export function Header(props: Props) {
   const className = props.className ?? "";
   const { isOpen, onToggle } = useDisclosure(); // Manage the mobile menu state here
   const { config, configLoading } = useLoadConfig();
-
+ const { isValid, contractAddress } = useNetworkValidation(); // Get the contract address and validation status
   // Move all hook calls to the top level of the component
   const bg = useColorModeValue("gray.50", "gray.900");
   const color = useColorModeValue("gray.700", "gray.200");
@@ -94,7 +95,7 @@ export function Header(props: Props) {
             largeScreen: false,
           }}
         />
-                    <AccountStatus /> 
+                    {isValid && (  <AccountStatus />  )}
         <ThemeSwitcher />
       </Flex>
 

@@ -24,7 +24,7 @@ const AccountStatus = () => {
   const [walletAddress, setWalletAddress] = useState<string>();
   const [status, setStatus] = useState<string>();
   const addressInfo = useAddressInfo(walletAddress || '');
-  const displayName = addressInfo.odudeName || "No Name";
+  const displayName = addressInfo.odudeName || "No On-Address Name";
   const { config, configLoading } = useLoadConfig(); // Load configuration
 
   const setMembershipStatus = (key: string, status: string) => {
@@ -108,7 +108,14 @@ const AccountStatus = () => {
             {isConnected ? (
               <div>
                 <p>Connected Wallet Address: {walletAddress}</p>
-                <p>ODude Name: {displayName}</p>
+                {displayName === "No On-Address Name" ? (
+                  <Button as="a" href="/list" colorScheme="blue" variant="link">
+                    {displayName}
+                  </Button>
+                ) : (
+                  
+                  <Button as="a" href={`/domain/info/${displayName}`} colorScheme="blue" variant="link">{displayName}</Button>
+                )}
                 <p>Membership Status: {status}</p>
               </div>
             ) : (
