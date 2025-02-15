@@ -18,11 +18,12 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import localforage from 'localforage';
+import { useMemberStatus } from "../../../hooks/member";
 
 const getRandomColor = (isDarkMode) => {
   const lightColors = ["#FFFAF0", "#F0FFF4", "#F0F8FF", "#FFF5F5", "#F5FFFA"];
   const darkColors = ["#2D3748", "#1A202C", "#4A5568", "#2A4365", "#3C366B"];
-  return isDarkMode ? darkColors[Math.floor(Math.random() * darkColors.length)] : lightColors[Math.floor(Math.random() * lightColors.length)];
+  return isDarkMode ? darkColors[Math.floor(Math.random() * darkColors.length)] : lightColors[Math.floor(Math.random() * darkColors.length)];
 };
 
 const Board = () => {
@@ -36,7 +37,7 @@ const Board = () => {
   const [content, setContent] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const { isConnected, isMember, isAdmin } = useMemberStatus();
   const fetchNotes = async () => {
     try {
       const response = await fetch('/api/app/note/note?action=get-note');
@@ -155,6 +156,10 @@ const Board = () => {
   };
 
   useEffect(() => {
+    console.log('Member status:', { isConnected, isMember, isAdmin });
+  }, [isConnected, isMember, isAdmin]);
+
+  useEffect(() => {
     fetchNotes(); // Fetch notes from the database
   }, []);
 
@@ -169,6 +174,8 @@ const Board = () => {
   if (!config) {
     return <div>Error loading configuration.</div>;
   }
+
+  
 
   return (
     <>
@@ -198,47 +205,55 @@ const Board = () => {
             justifyContent={"center"}
             py={{ base: 40, md: 32 }} // Increase the padding on the y-axis
           >
-            <Button
-              onClick={handleOpenAddNote}
-              m='3'
-              position="absolute"
-              top="10px"
-              right="10px"
-              zIndex={1} // Ensure the button is on top of other elements
-            >
-              <AddIcon />
-            </Button>
-            <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={6}>
-              {notes.map((note) => (
-                <GridItem
-                  key={note._id}
-                  w="100%"
-                  bg={getRandomColor(isDarkMode)}
-                  p={4}
-                  borderRadius="md"
-                  shadow="md"
-                  cursor="pointer"
-                  _hover={{ borderColor: noteHoverBorder, borderWidth: "2px" }}
-                >
-                  <Text fontSize="xs" color="gray.500" textAlign="center">{new Date(note.Date).toGMTString()}</Text>
-                  <Text fontWeight="bold" textAlign="center" mt={2}>{note.Title}</Text>
-                  <HStack justifyContent="flex-end" mt={4}>
-                    <IconButton
-                      icon={<EditIcon />}
-                      size="sm"
-                      onClick={() => handleNoteClick(note)}
-                      aria-label="Edit Note"
-                    />
-                    <IconButton
-                      icon={<DeleteIcon />}
-                      size="sm"
-                      onClick={() => deleteNote(note._id)}
-                      aria-label="Delete Note"
-                    />
-                  </HStack>
-                </GridItem>
-              ))}
-            </Grid>
+            {isAdmin && (
+              <Button
+                onClick={handleOpenAddNote}
+                m='3'
+                position="absolute"
+                top="10px"
+                right="10px"
+                zIndex={1} // Ensure the button is on top of other elements
+              >
+                <AddIcon />
+              </Button>
+            )}
+            {isConnected ? (
+              <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={6}>
+                {notes.map((note) => (
+                  <GridItem
+                    key={note._id}
+                    w="100%"
+                    bg={getRandomColor(isDarkMode)}
+                    p={4}
+                    borderRadius="md"
+                    shadow="md"
+                    cursor="pointer"
+                    _hover={{ borderColor: noteHoverBorder, borderWidth: "2px" }}
+                  >
+                    <Text fontSize="xs" color="gray.500" textAlign="center">{new Date(note.Date).toGMTString()}</Text>
+                    <Text fontWeight="bold" textAlign="center" mt={2}>{note.Title}</Text>
+                    {isAdmin && (
+                    <HStack justifyContent="flex-end" mt={4}>
+                      <IconButton
+                        icon={<EditIcon />}
+                        size="sm"
+                        onClick={() => handleNoteClick(note)}
+                        aria-label="Edit Note"
+                      />
+                      <IconButton
+                        icon={<DeleteIcon />}
+                        size="sm"
+                        onClick={() => deleteNote(note._id)}
+                        aria-label="Delete Note"
+                      />
+                    </HStack>
+                    )}
+                  </GridItem>
+                ))}
+              </Grid>
+            ) : (
+              <Text>Account not connected</Text>
+            )}
           </Container>
         </Box>
       </Flex>

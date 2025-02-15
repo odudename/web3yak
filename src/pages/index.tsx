@@ -3,7 +3,7 @@ import React from "react";
 import { useLoadConfig } from '../hooks/useLoadConfig';
 import Search from "../components/domain/Search";
 import { Image,Center,Spinner } from '@chakra-ui/react'
-import PrivateNotice from "../components/message/PrivateNotice";
+
 // Import debounce from lodash
 import {
   Box,
@@ -65,7 +65,7 @@ const Home: NextPage = () => {
             {config.DOMAIN_TITLE}
           </Heading>
           <Box flex="1" textAlign="right">
-            <PrivateNotice />
+         
 
           </Box>
         </Flex>

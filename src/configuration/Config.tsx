@@ -62,9 +62,9 @@ export const NAV_ITEMS = [
       href: "/",
       children: [
         {
-          label: "ODude",
-          subLabel: "ODude.com",
-          href: "https://odude.com",
+          label: "Notes",
+          subLabel: "Only for Members",
+          href: "/app/note",
         },
         {
           label: "Web3Yak",
