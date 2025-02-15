@@ -29,7 +29,7 @@ export const DOMAIN_TITLE = "Join our ODude Community" //Title above the search 
 export const DOMAIN_PLACEHOLDER = "Search for a name" //Placeholder for search input field 
 
 //Admin wallet address of TLD mentioned at DOMAIN_TLD
-export const ADMIN_WALLET = "0xbed79816b54E75eD54BF217333342C8d271b3b6f" //ETH wallet address 
+export const ADMIN_WALLET = "0xaa481F8d2d966e5fCC0446fA459F5d580AE5ea9f" //ETH wallet address 
 
 export const PROJECT_ID="2cb7b50126c5f7da8bc2dc5cfef00896" //https://cloud.walletconnect.com/sign-in
 

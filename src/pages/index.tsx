@@ -65,7 +65,7 @@ const Home: NextPage = () => {
             {config.DOMAIN_TITLE}
           </Heading>
           <Box flex="1" textAlign="right">
-         
+          
 
           </Box>
         </Flex>
