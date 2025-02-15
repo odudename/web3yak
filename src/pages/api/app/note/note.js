@@ -72,9 +72,19 @@ async function addNoteHandler(req, res) {
     console.log('Received data for adding note:', { title, notes }); // Debug log
     const db = await connectToDatabase();
 
-    // Create new note
-    console.log('Creating new note'); // Debug log
-    await db.collection('notices').insertOne({ title, notes });
+    // Create new note with consistent field names
+    const newID = Math.floor(Math.random() * 1000000); // Increased range to reduce collision
+    const currentDate = new Date().toUTCString(); // Get the current date and time in UTC
+
+    const newEntry = {
+      ID: newID,
+      Date: currentDate,
+      Title: title,
+      Message: notes,
+    };
+
+    console.log('Creating new note:', newEntry); // Debug log
+    await db.collection('notices').insertOne(newEntry);
     res.status(200).json({ message: 'Note created successfully' });
   } catch (error) {
     console.error('Error adding note:', error);
@@ -92,11 +102,19 @@ async function updateNoteHandler(req, res) {
     console.log('Received data for updating note:', { id, title, notes }); // Debug log
     const db = await connectToDatabase();
 
-    // Update existing note
-    console.log('Updating note with ID:', id); // Debug log
+    // Update existing note with consistent field names
+    const currentDate = new Date().toUTCString(); // Get the current date and time in UTC
+
+    const updatedEntry = {
+      Date: currentDate,
+      Title: title,
+      Message: notes,
+    };
+
+    console.log('Updating note with ID:', id, 'with data:', updatedEntry); // Debug log
     const result = await db.collection('notices').updateOne(
       { _id: new ObjectId(id) },
-      { $set: { title, notes } }
+      { $set: updatedEntry }
     );
 
     if (result.modifiedCount === 1) {
