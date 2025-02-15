@@ -44,6 +44,7 @@ const Board = () => {
 
   const addNote = async () => {
     try {
+      console.log('Adding note:', { title, notes: content }); // Debug log
       const response = await fetch('/api/app/note/note?action=update-note', {
         method: 'POST',
         headers: {
@@ -52,10 +53,10 @@ const Board = () => {
         },
         body: JSON.stringify({
           title,
-          notes: content,
+          notes: content, // Ensure the correct field name is used
         }),
       });
-
+      console.log('Response status:', response.status); // Debug log
       if (response.ok) {
         console.log('Note added successfully');
         setTitle("");
@@ -73,6 +74,7 @@ const Board = () => {
 
   const updateNote = async () => {
     try {
+      console.log('Updating note:', { id: selectedNote._id, title, notes: content }); // Debug log
       const response = await fetch('/api/app/note/note?action=update-note', {
         method: 'POST', // Use POST method for updating
         headers: {
@@ -82,9 +84,10 @@ const Board = () => {
         body: JSON.stringify({
           id: selectedNote._id, // Include the note ID in the request body
           title,
-          notes: content,
+          notes: content, // Ensure the correct field name is used
         }),
       });
+      console.log('Response status:', response.status); // Debug log
 
       if (response.ok) {
         console.log('Note updated successfully');
@@ -140,6 +143,7 @@ const Board = () => {
     setSelectedNote(null);
     setTitle("");
     setContent("");
+    onClose(); // Ensure the modal is closed
   };
 
   useEffect(() => {

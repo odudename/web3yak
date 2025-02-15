@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
   const { action } = req.query;
+  console.log('API action:', action); // Debug log
 
   switch (action) {
     case 'delete-note':
@@ -63,15 +64,21 @@ async function updateNoteHandler(req, res) {
 
   try {
     const { id, title, notes } = req.body;
+    console.log('Received data:', { id, title, notes }); // Debug log
     const db = await connectToDatabase();
 
     if (id) {
       // Update existing note
-      await db.collection('notices').updateOne(
+      const result = await db.collection('notices').updateOne(
         { _id: new ObjectId(id) },
         { $set: { title, notes } }
       );
-      res.status(200).json({ message: 'Note updated successfully' });
+
+      if (result.modifiedCount === 1) {
+        res.status(200).json({ message: 'Note updated successfully' });
+      } else {
+        res.status(404).json({ error: `No entry found with ID ${id}` });
+      }
     } else {
       // Create new note
       await db.collection('notices').insertOne({ title, notes });
