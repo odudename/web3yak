@@ -35,6 +35,7 @@ const Board = () => {
           borderRadius="md"
           color={color}
           shadow="base"
+          width="100%" // Ensure the Flex container takes full width
         >
           <Box
             textAlign="center"
@@ -43,11 +44,14 @@ const Board = () => {
             p={{ base: 2, lg: 1 }}
             bgSize={"lg"}
             maxH={"80vh"}
+            width="100%" // Ensure the Box takes full width
           >
             <Container
-              maxW={"xl"}
+              maxW={"100%"} // Set the maximum width to 100%
+              width="100%" // Ensure the container takes full width
               alignItems={"center"}
               justifyContent={"center"}
+              py={{ base: 40, md: 32 }} // Increase the padding on the y-axis
             >
               <Stack
                 as={Box}
