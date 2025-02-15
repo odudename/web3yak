@@ -53,7 +53,7 @@ async function getNoteHandler(req, res) {
   try {
     console.log('Fetching notes'); // Debug log
     const db = await connectToDatabase();
-    const notes = await db.collection('notices').find({}).sort({ Date: -1 }).toArray(); // Fetch all notes
+    const notes = await db.collection('notices').find({}).sort({ Date: -1 }).toArray(); // Fetch all notes sorted by Date in descending order
 
     res.status(200).json(notes);
   } catch (error) {

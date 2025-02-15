@@ -13,16 +13,24 @@ import {
   Input,
   Textarea,
   useDisclosure,
+  IconButton,
+  HStack,
 } from "@chakra-ui/react";
-import { AddIcon, CloseIcon, DeleteIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import localforage from 'localforage';
+
+const getRandomColor = (isDarkMode) => {
+  const lightColors = ["#FFFAF0", "#F0FFF4", "#F0F8FF", "#FFF5F5", "#F5FFFA"];
+  const darkColors = ["#2D3748", "#1A202C", "#4A5568", "#2A4365", "#3C366B"];
+  return isDarkMode ? darkColors[Math.floor(Math.random() * darkColors.length)] : lightColors[Math.floor(Math.random() * lightColors.length)];
+};
 
 const Board = () => {
   const { config, configLoading } = useLoadConfig(); // Load configuration
   const bg = useColorModeValue("white", "gray.700");
   const color = useColorModeValue("gray.700", "whiteAlpha.900");
-  const noteBg = useColorModeValue("gray.100", "gray.800");
-  const noteHoverBg = useColorModeValue("gray.200", "gray.700");
+  const noteHoverBorder = useColorModeValue("neonBlue", "neonBlue");
+  const isDarkMode = useColorModeValue(false, true);
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -205,16 +213,29 @@ const Board = () => {
                 <GridItem
                   key={note._id}
                   w="100%"
-                  bg={noteBg}
+                  bg={getRandomColor(isDarkMode)}
                   p={4}
                   borderRadius="md"
                   shadow="md"
                   cursor="pointer"
-                  _hover={{ bg: noteHoverBg }}
-                  onClick={() => handleNoteClick(note)}
+                  _hover={{ borderColor: noteHoverBorder, borderWidth: "2px" }}
                 >
-                  <Text fontWeight="bold">{note.Title}</Text>
-                  <Text>{note.Message}</Text>
+                  <Text fontSize="xs" color="gray.500" textAlign="center">{new Date(note.Date).toGMTString()}</Text>
+                  <Text fontWeight="bold" textAlign="center" mt={2}>{note.Title}</Text>
+                  <HStack justifyContent="flex-end" mt={4}>
+                    <IconButton
+                      icon={<EditIcon />}
+                      size="sm"
+                      onClick={() => handleNoteClick(note)}
+                      aria-label="Edit Note"
+                    />
+                    <IconButton
+                      icon={<DeleteIcon />}
+                      size="sm"
+                      onClick={() => deleteNote(note._id)}
+                      aria-label="Delete Note"
+                    />
+                  </HStack>
                 </GridItem>
               ))}
             </Grid>
