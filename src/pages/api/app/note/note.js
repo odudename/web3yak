@@ -1,8 +1,23 @@
 import { connectToDatabase } from '../../../../hooks/useDatabase';
 import { ObjectId } from 'mongodb';
 
+const AUTH_TOKEN = process.env.NEXT_PUBLIC_PASSWORD;
+
+function authorize(req, res) {
+  const token = req.headers['api-token'];
+  if (token !== AUTH_TOKEN) {
+    res.status(403).json({ error: 'Forbidden' });
+    return false;
+  }
+  return true;
+}
+
 export default async function handler(req, res) {
   const { action } = req.query;
+  console.log('API action:', action); // Debug log
+
+  if (action !== 'get-note' && !authorize(req, res)) return;
+
   console.log('API action:', action); // Debug log
 
   switch (action) {
