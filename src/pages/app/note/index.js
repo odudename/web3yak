@@ -45,7 +45,7 @@ const Board = () => {
   const addNote = async () => {
     try {
       console.log('Adding note:', { title, notes: content }); // Debug log
-      const response = await fetch('/api/app/note/note?action=update-note', {
+      const response = await fetch('/api/app/note/note?action=add-note', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

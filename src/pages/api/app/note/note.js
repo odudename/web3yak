@@ -12,6 +12,9 @@ export default async function handler(req, res) {
     case 'get-note':
       await getNoteHandler(req, res);
       break;
+    case 'add-note':
+      await addNoteHandler(req, res);
+      break;
     case 'update-note':
       await updateNoteHandler(req, res);
       break;
@@ -27,6 +30,7 @@ async function deleteNoteHandler(req, res) {
 
   try {
     const { id } = req.query;
+    console.log('Deleting note with ID:', id); // Debug log
     const db = await connectToDatabase();
     const result = await db.collection('notices').deleteOne({ _id: new ObjectId(id) });
 
@@ -47,6 +51,7 @@ async function getNoteHandler(req, res) {
   }
 
   try {
+    console.log('Fetching notes'); // Debug log
     const db = await connectToDatabase();
     const notes = await db.collection('notices').find({}).sort({ Date: -1 }).toArray(); // Fetch all notes
 
@@ -57,6 +62,26 @@ async function getNoteHandler(req, res) {
   }
 }
 
+async function addNoteHandler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  try {
+    const { title, notes } = req.body;
+    console.log('Received data for adding note:', { title, notes }); // Debug log
+    const db = await connectToDatabase();
+
+    // Create new note
+    console.log('Creating new note'); // Debug log
+    await db.collection('notices').insertOne({ title, notes });
+    res.status(200).json({ message: 'Note created successfully' });
+  } catch (error) {
+    console.error('Error adding note:', error);
+    res.status(500).json({ error: 'Failed to add note' });
+  }
+}
+
 async function updateNoteHandler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -64,25 +89,20 @@ async function updateNoteHandler(req, res) {
 
   try {
     const { id, title, notes } = req.body;
-    console.log('Received data:', { id, title, notes }); // Debug log
+    console.log('Received data for updating note:', { id, title, notes }); // Debug log
     const db = await connectToDatabase();
 
-    if (id) {
-      // Update existing note
-      const result = await db.collection('notices').updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { title, notes } }
-      );
+    // Update existing note
+    console.log('Updating note with ID:', id); // Debug log
+    const result = await db.collection('notices').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { title, notes } }
+    );
 
-      if (result.modifiedCount === 1) {
-        res.status(200).json({ message: 'Note updated successfully' });
-      } else {
-        res.status(404).json({ error: `No entry found with ID ${id}` });
-      }
+    if (result.modifiedCount === 1) {
+      res.status(200).json({ message: 'Note updated successfully' });
     } else {
-      // Create new note
-      await db.collection('notices').insertOne({ title, notes });
-      res.status(200).json({ message: 'Note created successfully' });
+      res.status(404).json({ error: `No entry found with ID ${id}` });
     }
   } catch (error) {
     console.error('Error updating note:', error);
