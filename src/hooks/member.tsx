@@ -23,6 +23,7 @@ export const useMemberStatus = () => {
             try {
 
                 const memberStatus = address ? await isValidMember(address) : null;
+                console.log(memberStatus);
                 if (address === config.ADMIN_WALLET) {
                     console.log("Admin");
                     setStatus(MemberStatus.ADMIN);
@@ -40,7 +41,7 @@ export const useMemberStatus = () => {
         fetchMemberStatus();
     }, [address, isConnected, configLoading]);
 
-    const isMember = status === MemberStatus.GOLD;
+    const isMember = status === MemberStatus.GOLD || status === MemberStatus.ADMIN;
     const isAdmin = status === MemberStatus.ADMIN;
 
     return { isConnected, isMember, isAdmin };

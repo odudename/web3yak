@@ -15,8 +15,16 @@ import {
   useDisclosure,
   IconButton,
   HStack,
+  Heading,
   useColorMode, // Import useColorMode
 } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from "@chakra-ui/react";
+
 import { AddIcon, DeleteIcon, EditIcon, CloseIcon } from '@chakra-ui/icons';
 import localforage from 'localforage';
 import { useMemberStatus } from "../../../hooks/member";
@@ -232,21 +240,27 @@ const Board = () => {
             width="100%" // Ensure the container takes full width
             alignItems={"center"}
             justifyContent={"center"}
-            py={{ base: 40, md: 32 }} // Increase the padding on the y-axis
-          >
-            {isAdmin && (
-              <Button
-                onClick={handleOpenAddNote}
-                m='3'
-                position="absolute"
-                top="10px"
-                right="10px"
-                zIndex={1} // Ensure the button is on top of other elements
+            // Increase the padding on the y-axis
+                  >
+                  <Heading as="h3" size="md" fontSize="20px">
+                    {config.NOTICE_TITLE}
+                  </Heading>
+                  <Box borderBottom="1px" borderColor="gray.200" my={4} /> {/* Divider */}
+                  {isAdmin && (
+                    <Button
+                    onClick={handleOpenAddNote}
+                    m='3'
+                    position="absolute"
+                    top="10px"
+                    right="10px"
+                    zIndex={1} // Ensure the button is on top of other elements
               >
                 <AddIcon />
               </Button>
             )}
             {isConnected ? (
+
+isMember ? (
               <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={6}>
                 {notes.map((note) => (
                   <GridItem
@@ -281,6 +295,13 @@ const Board = () => {
                   </GridItem>
                 ))}
               </Grid>
+) : (<>
+
+<Alert status="error">
+                        <AlertIcon />
+                        <AlertTitle> {config.NOTICE_NON_MEMBER}</AlertTitle>
+                      </Alert>
+</>)
             ) : (
               <Text>Account not connected</Text>
             )}

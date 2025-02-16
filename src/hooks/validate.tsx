@@ -75,13 +75,13 @@ export async function isValidMember(address: string) {
   async function getStatus(address:string)
   {
     const membershipStatus = await getMembershipStatus(address);
-    //console.log(membershipStatus);
+    console.log(membershipStatus);
   
-    return membershipStatus;
+    return membershipStatus === 'GOLD' || membershipStatus === 'ADMIN' ? membershipStatus : null;
   }
  
   let member=await getStatus(address);
-  //console.log(member);
+  console.log(member);
   return member;
 
 }

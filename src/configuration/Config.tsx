@@ -35,8 +35,8 @@ export const PROJECT_ID="2cb7b50126c5f7da8bc2dc5cfef00896" //https://cloud.walle
 
 
 //Bulletin board at front page
-export const NOTICE_TITLE = "Bulletin board"
-export const NOTICE_NON_MEMBER = "Only the @eth & @btc name holder can view bulletin board."
+export const NOTICE_TITLE = "Admin Notes"
+export const NOTICE_NON_MEMBER = "Only the @web3 name holder can view Notes"
 
 //Banner at front page
 export const DOMAIN_BANNER = "https://web3domain.org/studio/wp-content/uploads/2024/12/yak.png" //290x80 size
@@ -62,7 +62,7 @@ export const NAV_ITEMS = [
       href: "/",
       children: [
         {
-          label: "Notes",
+          label: "Admin Notes",
           subLabel: "Only for Members",
           href: "/app/note",
         },
