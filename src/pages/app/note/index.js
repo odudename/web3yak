@@ -184,7 +184,7 @@ const Board = () => {
   };
 
   useEffect(() => {
-    console.log('Member status:', { isConnected, isMember, isAdmin });
+    //console.log('Member status:', { isConnected, isMember, isAdmin });
   }, [isConnected, isMember, isAdmin]);
 
   useEffect(() => {
@@ -346,7 +346,7 @@ isMember ? (
           ) : (
             <Button onClick={addNote} colorScheme="green" mt={4}>Add Note</Button>
           )}
-          <Button onClick={handleCloseNote} colorScheme="blue" mt={4} ml={2}>Close</Button>
+          <Button onClick={handleCloseNote} colorScheme="blue" mt={4} ml={2} size="sm">Close</Button>
         </Box>
       )}
 
@@ -362,6 +362,8 @@ isMember ? (
           shadow="md"
           zIndex={1000}
           width="80%"
+          maxH="70vh" // Set maximum height
+          overflowY="auto" // Enable vertical scrolling
         >
           <IconButton
             icon={<CloseIcon />}
@@ -370,10 +372,15 @@ isMember ? (
             right="10px"
             onClick={handleCloseViewNote}
             aria-label="Close View Note"
+            size="sm"
           />
           <Text fontSize="xs" color="gray.500" textAlign="center">{new Date(viewNote.Date).toGMTString()}</Text>
           <Text fontWeight="bold" textAlign="center" mt={2} color={titleColor}>{viewNote.Title}</Text>
-          <Text mt={4} color={contentColor}>{viewNote.Message}</Text>
+          <Box mt={4} color={contentColor}>
+            {viewNote.Message.split('\n').map((paragraph, index) => (
+              <Text key={index} mb={2}>{paragraph}</Text>
+            ))}
+          </Box>
         </Box>
       )}
 
@@ -408,8 +415,8 @@ isMember ? (
           />
 
           <Button onClick={updateNote} colorScheme="green" mt={4}>Update</Button>
-          <Button onClick={handleCloseNote} colorScheme="blue" mt={4} ml={2}>Close</Button>
-          <Button onClick={() => deleteNote(selectedNote._id)} colorScheme="red" mt={4} ml={2}>Delete</Button>
+          <Button onClick={handleCloseNote} colorScheme="blue" mt={4} ml={2} size="sm">Close</Button>
+     
         </Box>
       )}
     </>

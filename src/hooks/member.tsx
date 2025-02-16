@@ -23,9 +23,9 @@ export const useMemberStatus = () => {
             try {
 
                 const memberStatus = address ? await isValidMember(address) : null;
-                console.log(memberStatus);
+              //  console.log(memberStatus);
                 if (address === config.ADMIN_WALLET) {
-                    console.log("Admin");
+                   // console.log("Admin");
                     setStatus(MemberStatus.ADMIN);
                 } else if (memberStatus) {
                     setStatus(MemberStatus.GOLD);

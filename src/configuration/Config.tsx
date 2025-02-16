@@ -62,9 +62,9 @@ export const NAV_ITEMS = [
       href: "/",
       children: [
         {
-          label: "Admin Notes",
-          subLabel: "Only for Members",
-          href: "/app/note",
+          label: "Name List",
+          subLabel: "ODude Names",
+          href: "/list",
         },
         {
           label: "Web3Yak",
@@ -79,9 +79,9 @@ export const NAV_ITEMS = [
       ],
     },
     {
-      label: "Names",
-      href: "/list",
-    },
+      label: "Notes",
+      href: "/app/note",
+    }
   ];
   
   

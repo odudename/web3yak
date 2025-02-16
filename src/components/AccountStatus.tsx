@@ -62,8 +62,8 @@ const AccountStatus = () => {
         async function getStatus() {
           try {
             let test = await isValidMember(walletAddress || '');
-            console.log(walletAddress);
-            console.log(test); 
+          //  console.log(walletAddress);
+           // console.log(test); 
           } catch (error) {
             console.error("Error fetching membership status:", error);
           }
