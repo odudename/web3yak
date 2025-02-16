@@ -15,13 +15,14 @@ import {
   useDisclosure,
   IconButton,
   HStack,
+  useColorMode, // Import useColorMode
 } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon, EditIcon, CloseIcon } from '@chakra-ui/icons';
 import localforage from 'localforage';
 import { useMemberStatus } from "../../../hooks/member";
 
 const getRandomColor = (isDarkMode) => {
-  const lightColors = ["#FFFAF0", "#F0FFF4", "#F0F8FF", "#FFF5F5", "#F5FFFA"];
+  const lightColors = ["#F0E68C", "#E6E6FA", "#D3D3D3", "#b6fffa", "#9eb3e9"]; // Darker light colors
   const darkColors = ["#2D3748", "#1A202C", "#4A5568", "#2A4365", "#3C366B"];
   return isDarkMode ? darkColors[Math.floor(Math.random() * darkColors.length)] : lightColors[Math.floor(Math.random() * lightColors.length)];
 };
@@ -42,6 +43,7 @@ const Board = () => {
   const [noteColors, setNoteColors] = useState({}); // Store colors for each note
   const titleColor = useColorModeValue("gray.700", "whiteAlpha.900");
   const contentColor = useColorModeValue("gray.600", "whiteAlpha.800");
+  const { colorMode } = useColorMode(); // Get the current color mode
 
   const fetchNotes = async () => {
     try {
@@ -180,6 +182,15 @@ const Board = () => {
   useEffect(() => {
     fetchNotes(); // Fetch notes from the database
   }, []);
+
+  useEffect(() => {
+    // Recalculate note colors when the color mode changes
+    const colors = {};
+    notes.forEach(note => {
+      colors[note._id] = getRandomColor(isDarkMode);
+    });
+    setNoteColors(colors);
+  }, [colorMode, notes]); // Add colorMode and notes as dependencies
 
   if (configLoading) {
     return (
