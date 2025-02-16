@@ -16,7 +16,7 @@ import {
   IconButton,
   HStack,
 } from "@chakra-ui/react";
-import { AddIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, EditIcon, CloseIcon } from '@chakra-ui/icons';
 import localforage from 'localforage';
 import { useMemberStatus } from "../../../hooks/member";
 
@@ -38,6 +38,7 @@ const Board = () => {
   const [selectedNote, setSelectedNote] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isConnected, isMember, isAdmin } = useMemberStatus();
+  const [viewNote, setViewNote] = useState(null); // Add state for viewing a note
   const fetchNotes = async () => {
     try {
       const response = await fetch('/api/app/note/note?action=get-note');
@@ -155,6 +156,14 @@ const Board = () => {
     onClose(); // Ensure the modal is closed
   };
 
+  const handleViewNote = (note) => {
+    setViewNote(note);
+  };
+
+  const handleCloseViewNote = () => {
+    setViewNote(null);
+  };
+
   useEffect(() => {
     console.log('Member status:', { isConnected, isMember, isAdmin });
   }, [isConnected, isMember, isAdmin]);
@@ -229,6 +238,7 @@ const Board = () => {
                     shadow="md"
                     cursor="pointer"
                     _hover={{ borderColor: noteHoverBorder, borderWidth: "2px" }}
+                    onClick={() => handleViewNote(note)} // Make note clickable
                   >
                     <Text fontSize="xs" color="gray.500" textAlign="center">{new Date(note.Date).toGMTString()}</Text>
                     <Text fontWeight="bold" textAlign="center" mt={2}>{note.Title}</Text>
@@ -237,13 +247,13 @@ const Board = () => {
                       <IconButton
                         icon={<EditIcon />}
                         size="sm"
-                        onClick={() => handleNoteClick(note)}
+                        onClick={(e) => { e.stopPropagation(); handleNoteClick(note); }}
                         aria-label="Edit Note"
                       />
                       <IconButton
                         icon={<DeleteIcon />}
                         size="sm"
-                        onClick={() => deleteNote(note._id)}
+                        onClick={(e) => { e.stopPropagation(); deleteNote(note._id); }}
                         aria-label="Delete Note"
                       />
                     </HStack>
@@ -296,6 +306,33 @@ const Board = () => {
             <Button onClick={addNote} colorScheme="green" mt={4}>Add Note</Button>
           )}
           <Button onClick={handleCloseNote} colorScheme="blue" mt={4} ml={2}>Close</Button>
+        </Box>
+      )}
+
+      {viewNote && (
+        <Box
+          position="fixed"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          bg={bg}
+          p={6}
+          borderRadius="md"
+          shadow="md"
+          zIndex={1000}
+          width="80%"
+        >
+          <IconButton
+            icon={<CloseIcon />}
+            position="absolute"
+            top="10px"
+            right="10px"
+            onClick={handleCloseViewNote}
+            aria-label="Close View Note"
+          />
+          <Text fontSize="xs" color="gray.500" textAlign="center">{new Date(viewNote.Date).toGMTString()}</Text>
+          <Text fontWeight="bold" textAlign="center" mt={2}>{viewNote.Title}</Text>
+          <Text mt={4}>{viewNote.Message}</Text>
         </Box>
       )}
 
