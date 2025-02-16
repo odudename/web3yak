@@ -23,7 +23,7 @@ import { useMemberStatus } from "../../../hooks/member";
 const getRandomColor = (isDarkMode) => {
   const lightColors = ["#FFFAF0", "#F0FFF4", "#F0F8FF", "#FFF5F5", "#F5FFFA"];
   const darkColors = ["#2D3748", "#1A202C", "#4A5568", "#2A4365", "#3C366B"];
-  return isDarkMode ? darkColors[Math.floor(Math.random() * darkColors.length)] : lightColors[Math.floor(Math.random() * darkColors.length)];
+  return isDarkMode ? darkColors[Math.floor(Math.random() * darkColors.length)] : lightColors[Math.floor(Math.random() * lightColors.length)];
 };
 
 const Board = () => {
@@ -39,6 +39,10 @@ const Board = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isConnected, isMember, isAdmin } = useMemberStatus();
   const [viewNote, setViewNote] = useState(null); // Add state for viewing a note
+  const [noteColors, setNoteColors] = useState({}); // Store colors for each note
+  const titleColor = useColorModeValue("gray.700", "whiteAlpha.900");
+  const contentColor = useColorModeValue("gray.600", "whiteAlpha.800");
+
   const fetchNotes = async () => {
     try {
       const response = await fetch('/api/app/note/note?action=get-note');
@@ -46,6 +50,11 @@ const Board = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      const colors = {};
+      data.forEach(note => {
+        colors[note._id] = getRandomColor(isDarkMode);
+      });
+      setNoteColors(colors);
       setNotes(data);
     } catch (error) {
       console.error('Error fetching notes:', error);
@@ -232,7 +241,7 @@ const Board = () => {
                   <GridItem
                     key={note._id}
                     w="100%"
-                    bg={getRandomColor(isDarkMode)}
+                    bg={noteColors[note._id]} // Use stored color
                     p={4}
                     borderRadius="md"
                     shadow="md"
@@ -315,7 +324,7 @@ const Board = () => {
           top="50%"
           left="50%"
           transform="translate(-50%, -50%)"
-          bg={bg}
+          bg={noteColors[viewNote._id]} // Use stored color
           p={6}
           borderRadius="md"
           shadow="md"
@@ -331,8 +340,8 @@ const Board = () => {
             aria-label="Close View Note"
           />
           <Text fontSize="xs" color="gray.500" textAlign="center">{new Date(viewNote.Date).toGMTString()}</Text>
-          <Text fontWeight="bold" textAlign="center" mt={2}>{viewNote.Title}</Text>
-          <Text mt={4}>{viewNote.Message}</Text>
+          <Text fontWeight="bold" textAlign="center" mt={2} color={titleColor}>{viewNote.Title}</Text>
+          <Text mt={4} color={contentColor}>{viewNote.Message}</Text>
         </Box>
       )}
 
