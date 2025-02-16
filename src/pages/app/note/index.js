@@ -320,6 +320,7 @@ isMember ? (
           borderRadius="md"
           shadow="md"
           zIndex={1000}
+          width={{ base: "90%", md: "60%" }} // Set width based on screen size
         >
           <Text mb='8px'>Title:</Text>
           <Input
@@ -361,7 +362,7 @@ isMember ? (
           borderRadius="md"
           shadow="md"
           zIndex={1000}
-          width="80%"
+          width={{ base: "90%", md: "60%" }} // Set width based on screen size
           maxH="70vh" // Set maximum height
           overflowY="auto" // Enable vertical scrolling
         >
@@ -395,7 +396,7 @@ isMember ? (
           borderRadius="md"
           shadow="md"
           zIndex={1000}
-          width="80%"
+          width={{ base: "90%", md: "60%" }} // Set width based on screen size
         >
           <Text mb='8px'>Title:</Text>
           <Input
