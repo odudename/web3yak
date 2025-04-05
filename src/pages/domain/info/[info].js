@@ -99,7 +99,7 @@ export default function Info() {
     if (info) {
       const randomNumber = Math.random();
       const url =
-        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
+        "https://web3yak.com/endpoint/v3/opensea.php?name=" +
         info +
         "&" +
         randomNumber;

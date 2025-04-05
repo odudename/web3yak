@@ -73,7 +73,7 @@ export default function Info() {
   const [jsonData, setJsonData] = useState(null); // Initialize jsonData as null
   const { getValue } = useJsonValue(jsonData);
   const [error, setError] = useState("");
-  const [claimUrl, setClaimUrl] = useState("http://web3domain.org");
+  const [claimUrl, setClaimUrl] = useState("http://web3yak.com");
   const [isLoading, setIsLoading] = useState(true);
   const [isMainLoading, setIsMainLoading] = useState(true);
   const [flag, setFlag] = useBoolean();
@@ -228,7 +228,7 @@ export default function Info() {
     if (domain, config) {
       const randomNumber = Math.random();
       const url =
-        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
+        "https://web3yak.com/endpoint/v3/opensea.php?name=" +
         domain +
         "&" +
         randomNumber;
@@ -737,7 +737,7 @@ export default function Info() {
                                   <></>
                                 )}
 
-                                {claimUrl != "http://web3domain.org" ? (
+                                {claimUrl != "http://web3yak.com" ? (
                                   <TokenURI
                                     domainName={domain}
                                     TokenURI={claimUrl}

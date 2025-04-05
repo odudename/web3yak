@@ -21,7 +21,7 @@ export const NETWORK_ERROR = "Unsupported Blockchain Network" //Change network n
 
 //Domain Information. It only supports single domain name. 
 export const DOMAIN_TLDS = ['btc', 'eth','web3']; // Array of TLDs
-export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/btc.jpg' //Image path starts with ipfs:// or https://
+export const DOMAIN_IMAGE_URL = 'https://web3yak.com/endpoint/nft/btc.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 137 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
 export const DOMAIN_DESCRIPTION = 'ODude Name service'
 export const DOMAIN_TYPE = "W3D" //W3D for polygon, FVM for Filecoin net
@@ -39,7 +39,7 @@ export const NOTICE_TITLE = "Admin Notes"
 export const NOTICE_NON_MEMBER = "Only the @web3 name holder can view Notes"
 
 //Banner at front page
-export const DOMAIN_BANNER = "https://web3domain.org/studio/wp-content/uploads/2024/12/yak.png" //290x80 size
+export const DOMAIN_BANNER = "https://web3yak.com/studio/wp-content/uploads/2024/12/yak.png" //290x80 size
 
 //Configuration should match with the chain specified at NETWORKS
 //Leave TOKEN_CONTRACT_ADDRESS to blank for default ETH payment
@@ -73,8 +73,8 @@ export const NAV_ITEMS = [
         },
         {
           label: "Web3Domain",
-          subLabel: "Web3Domain.org",
-          href: "https://web3domain.org",
+          subLabel: "web3yak.com",
+          href: "https://web3yak.com",
         },
       ],
     },

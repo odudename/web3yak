@@ -82,7 +82,7 @@ export default function Manage() {
   const [jsonData, setJsonData] = useState(null); // Initialize jsonData as null
   const [jsonDataNew, setJsonDataNew] = useState(null); // Initialize jsonData as null
   const { getValue } = useJsonValue(jsonData);
-  const [claimUrl, setClaimUrl] = useState("http://web3domain.org");
+  const [claimUrl, setClaimUrl] = useState("http://web3yak.com");
   const [image, setImage] = useState('');
   const [isMainLoading, setIsMainLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -148,8 +148,8 @@ export default function Manage() {
       try {
         const responseObject = JSON.parse(responseText);
         const cidValue = responseObject.link;
-       // console.log("https://web3domain.org/ipfs/" + cidValue);
-      //  setClaimUrl("https://web3domain.org/ipfs/" + cidValue);
+       // console.log("https://web3yak.com/ipfs/" + cidValue);
+      //  setClaimUrl("https://web3yak.com/ipfs/" + cidValue);
         console.log(cidValue);
         setClaimUrl(cidValue);
         setIsLoading(false);
@@ -175,7 +175,7 @@ export default function Manage() {
           console.log(responseObject);
           const cidValue = responseObject.link;
          const cidUrl = cidValue;
-      //  const cidUrl = "https://web3domain.org/ipfs/.....";
+      //  const cidUrl = "https://web3yak.com/ipfs/.....";
           console.log(cidUrl);
           setWeb2Url(cidUrl);
 
@@ -279,7 +279,7 @@ export default function Manage() {
     const randomNumber = Math.random(); // Generate a random number
     if (domain && config) {
       const url =
-        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
+        "https://web3yak.com/endpoint/v3/opensea.php?name=" +
         domain +
         "&" +
         randomNumber;
@@ -304,7 +304,7 @@ export default function Manage() {
     if (jsonData) {
       var img =
         jsonData?.image && jsonData.image.startsWith("ipfs://")
-          ? jsonData.image.replace("ipfs://", "https://web3domain.org/ipfs/")
+          ? jsonData.image.replace("ipfs://", "https://web3yak.com/ipfs/")
           : jsonData?.image;
       //console.log(img);
       setImage(jsonData && img);
@@ -342,7 +342,7 @@ export default function Manage() {
             setWeb2Url("");
           } else {
             setWeb2Url(
-              jsonData && "https://web3domain.org/ipfs/" + getValue("web_url")
+              jsonData && "https://web3yak.com/ipfs/" + getValue("web_url")
             );
           }
         }
@@ -800,7 +800,7 @@ export default function Manage() {
                             <></>
                           )}
 
-                          {claimUrl != "http://web3domain.org" && !flag ? (
+                          {claimUrl != "http://web3yak.com" && !flag ? (
                             <TokenURI domainName={domain} TokenURI={claimUrl} />
                           ) : (
                             <></>

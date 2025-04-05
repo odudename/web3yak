@@ -21,7 +21,7 @@ export const NETWORK_ERROR = "Switch to Filecoin Mainnet" //Change network name 
 
 //Domain Information. It only supports single domain name. 
 export const DOMAIN_TLDS = ['fil']; // Array of TLDs
-export const DOMAIN_IMAGE_URL = 'https://web3domain.org/endpoint/nft/fvm.jpg' //Image path starts with ipfs:// or https://
+export const DOMAIN_IMAGE_URL = 'https://web3yak.com/endpoint/nft/fvm.jpg' //Image path starts with ipfs:// or https://
 export const DOMAIN_NETWORK_CHAIN = 314 //137 for polygon, 314 for filecoin, 80001 for mumbai, 11155111 for sepolia
 export const DOMAIN_DESCRIPTION = 'FVM Name service'
 export const DOMAIN_TYPE = "FVM" //W3D for polygon, FVM for Filecoin net
@@ -39,7 +39,7 @@ export const NOTICE_TITLE = "Bulletin board"
 export const NOTICE_NON_MEMBER = "Only the @fil name holder can view bulletin board."
 
 //Banner at front page
-export const DOMAIN_BANNER = "https://web3domain.org/endpoint/images/filecoin_banner.png" //290x80 size
+export const DOMAIN_BANNER = "https://web3yak.com/endpoint/images/filecoin_banner.png" //290x80 size
 
 //Configuration should match with the chain specified at NETWORKS
 //Leave TOKEN_CONTRACT_ADDRESS to blank for default ETH payment
@@ -49,8 +49,8 @@ export const TOKEN_PRICE = "1" //Token price to mint
 export const TOKEN_DECIMAL = "18" //Decimal places of TOKEN_CONTRACT_ADDRESS or TOKEN_SYMBOL
 export const TOKEN_CONTRACT_ADDRESS=""
 
-export const FAVICON="https://web3domain.org/endpoint/tln/fvm/favicon.ico";
-export const LOGO="https://web3domain.org/endpoint/tln/fvm/logo.png";
+export const FAVICON="https://web3yak.com/endpoint/tln/fvm/favicon.ico";
+export const LOGO="https://web3yak.com/endpoint/tln/fvm/logo.png";
 
 // Menu
 // src/configuration/Config.tsx
@@ -72,8 +72,8 @@ export const NAV_ITEMS = [
       },
       {
         label: "Web3Domain",
-        subLabel: "Web3Domain.org",
-        href: "https://web3domain.org",
+        subLabel: "web3yak.com",
+        href: "https://web3yak.com",
       },
     ],
   },

@@ -8,7 +8,7 @@ export async function generateJson(rawjson: any[], name: string): Promise<object
     formData.append('data', JSON.stringify(rawjson)); // Append JSON data
     formData.append('name', name); // Append name string
     //const url = `http://localhost/blockchain/web3domain_org/endpoint/v1/json.php`;
-    const url = `https://web3domain.org/endpoint/v1/json.php`;
+    const url = `https://web3yak.com/endpoint/v1/json.php`;
     const response = await fetch(url, {
       method: 'POST',
       body: formData, // Use the FormData object
@@ -27,7 +27,7 @@ export async function generateImage(domainName: string, key: string, scan_url: s
   try {
     const [domain,primary] = domainName.split('@'); // Split domainName into primary and domain
     //const url = `http://localhost/blockchain/api/studio_nft.php?domain=${domain}&primary=${primary}&key=${key}`;
-    const url = `https://web3domain.org/endpoint/studio_qr.php?domain=${domain}&primary=${primary}&key=${key}&url=${scan_url}`;
+    const url = `https://web3yak.com/endpoint/studio_qr.php?domain=${domain}&primary=${primary}&key=${key}&url=${scan_url}`;
     //http://localhost/blockchain/api/studio_nft.php?domain=hi&primary=0x&key=9&url=0xns.pro
     console.log(url);
     const response = await fetch(url);
@@ -45,10 +45,10 @@ export async function generatePreview(rawjson: any[], name: string,generate: str
     const formData = new FormData();
     formData.append('data', JSON.stringify(rawjson)); // Append JSON data
     formData.append('name', name); // Append name string
-    formData.append('template',"https://web3domain.org/endpoint/template/theme1/index.php");
+    formData.append('template',"https://web3yak.com/endpoint/template/theme1/index.php");
     formData.append('generate',generate);
    // const url = `http://localhost/blockchain/web3domain_org/endpoint/template/start.php`;
-    const url = `https://web3domain.org/endpoint/template/start.php`;
+    const url = `https://web3yak.com/endpoint/template/start.php`;
     const response = await fetch(url, {
       method: 'POST',
       body: formData, // Use the FormData object

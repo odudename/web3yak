@@ -1,7 +1,7 @@
 # Web3Domain Studio
 ## _Become a Web3 Name provider_
 
-[![N|Solid](https://web3domain.org/studio/wp-content/uploads/banner.jpg)](https://web3domain.org/studio/)
+[![N|Solid](https://web3yak.com/studio/wp-content/uploads/banner.jpg)](https://web3yak.com/studio/)
 
 
 Empower your own website by selling subdomains. Integrate your domain into our ecosystem, offering every domain user access to all the features that Web3Domain provides.

@@ -1,7 +1,7 @@
 {
   "name": "web3yak",
   "private": true,
-  "version": "1.4",
+  "version": "1.5",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -30,7 +30,7 @@ export function CheckDomain(props: Props) {
   const [domainAddr, setDomainAddr] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  //const url = "https://web3domain.org/endpoint/v1/index.php?domain=" + props.domain;
+  //const url = "https://web3yak.com/endpoint/v1/index.php?domain=" + props.domain;
   //console.log(url);
 
 

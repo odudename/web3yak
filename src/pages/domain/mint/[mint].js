@@ -101,7 +101,7 @@ export default function Info() {
   // Update claimUrl and overrides when config, domain, or erc20 changes
   useEffect(() => {
     if (config) {
-      setClaimUrl(`https://web3domain.org/endpoint/temp_json.php?domain=${domain}&image=${config.DOMAIN_IMAGE_URL}`);
+      setClaimUrl(`https://web3yak.com/endpoint/temp_json.php?domain=${domain}&image=${config.DOMAIN_IMAGE_URL}`);
       setOverrides(erc20 ? {} : { value: ethers.utils.parseEther(config.TOKEN_PRICE || "0") });
     }
   }, [config, domain, erc20]);
@@ -314,7 +314,7 @@ export default function Info() {
     setDomainName(domain);
     setClaimId(uniqueId); // Update claimId state
     setClaimTransferTo(address || "0x0000000000000000000000000000000000000000"); // Update claimTransferTo state
-    setClaimUrl(`https://web3domain.org/endpoint/temp_json.php?domain=${domain}&image=${config?.DOMAIN_IMAGE_URL || ""}`);
+    setClaimUrl(`https://web3yak.com/endpoint/temp_json.php?domain=${domain}&image=${config?.DOMAIN_IMAGE_URL || ""}`);
 
     if (!isPrepareError && claimWrite) {
       console.log(`To: ${address} \n URL: ${claimUrl}`);

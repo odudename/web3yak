@@ -66,7 +66,7 @@ export default function Info() {
   const [jsonData, setJsonData] = useState(null); // Initialize jsonData as null
   const { getValue } = useJsonValue(jsonData);
   const [error, setError] = useState("");
-  const [claimUrl, setClaimUrl] = useState("http://web3domain.org");
+  const [claimUrl, setClaimUrl] = useState("http://web3yak.com");
   const [isLoading, setIsLoading] = useState(false);
   const [isMainLoading, setIsMainLoading] = useState(true);
   const [newUrl, setNewUrl] = useState("");
@@ -172,7 +172,7 @@ export default function Info() {
     if (domain && config) {
       const randomNumber = Math.random();
       const url =
-        "https://web3domain.org/endpoint/v3/opensea.php?name=" +
+        "https://web3yak.com/endpoint/v3/opensea.php?name=" +
         domain +
         "&" +
         randomNumber;
@@ -189,7 +189,7 @@ export default function Info() {
   
           const imgUrl =
             json?.image && json.image.startsWith("ipfs://")
-              ? `https://web3domain.org/ipfs/${json.image.replace("ipfs://", "")}`
+              ? `https://web3yak.com/ipfs/${json.image.replace("ipfs://", "")}`
               : json?.image || config.DOMAIN_IMAGE_URL;
   
           setNftImage(imgUrl);
@@ -354,7 +354,7 @@ export default function Info() {
                                         <></>
                                       )}
                                       &nbsp;
-                                      {claimUrl != "http://web3domain.org" ? (
+                                      {claimUrl != "http://web3yak.com" ? (
                                         <TokenURI
                                           domainName={domain}
                                           TokenURI={claimUrl}
